@@ -14,8 +14,8 @@
 const express = require('express') // Webserver
 let app = express()
 
-const KeplerConfiguration = require('./src/KeplerConfiguration')
-const DataSources = require('./src/DataSources')
+const KeplerConfiguration = require('./KeplerConfiguration')
+const DataSources = require('./DataSources')
 
 app.use(express.json())
 
