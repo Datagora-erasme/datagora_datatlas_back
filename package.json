@@ -1,0 +1,26 @@
+{
+  "name": "datagora_datatlas_back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "standard && node my-tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/urbanlab/datagora_datatlas_back.git"
+  },
+  "author": "P-A Racine",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/urbanlab/datagora_datatlas_back/issues"
+  },
+  "homepage": "https://github.com/urbanlab/datagora_datatlas_back#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12",
+    "standard": "*"
+  }
+}
