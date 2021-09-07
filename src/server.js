@@ -45,38 +45,12 @@ app.post('/api/conf/', (req, res) => {
 
 //  /api/data/${DataType}/${Datum}
 app.get('/api/data/:dataType/:dataWanted/', function(req, res) {
+  if(req.params.dataType==='notion'){ // todo must be automatically done : if == notion,
+
+  }
   // Access userId via: req.params.userId
   // Access bookId via: req.params.bookId
   res.send(req.params);
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.post('/api/users', function(req, res) {
-  /*
-  const user_id = req.body.id;
-  const token = req.body.token;
-  const geo = req.body.geo;
-
-  res.send({
-      'user_id': user_id,
-      'token': token,
-      'geo': geo
-  });
-  */
 });
 
 app.listen(3000); // todo port in env variable
