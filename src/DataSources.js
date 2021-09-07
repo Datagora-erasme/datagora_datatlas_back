@@ -4,13 +4,7 @@
 
 module.exports.getDataSources = () => {
     return {
-        "source 1":{
-            "nom":"nom",
-            "lien":"route1"
-        },
-        "source 2":{
-            "nom":"nom2",
-            "lien":"route2"
-        }
+        "notion_tiga":"/api/data/notion/notion_tiga/",
+        "nom2":"route2"
     };
 };

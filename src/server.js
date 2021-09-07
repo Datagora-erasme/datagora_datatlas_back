@@ -19,16 +19,20 @@ const DataSources = require('./DataSources')
 
 app.use(express.json())
 
-
-console.log('Bonjour Yassin')
 const has = Object.prototype.hasOwnProperty;
 
 /*
     Routes
-    /api/conf/        -> request for default configuration                                    -> send back the recorded Kepler configuration
-    /api/conf/(POST)  -> request for storing a new default configuration (new_configuration)  -> send back the recorded Kepler configuration
-    /api/data/${Datum}-> request to get the data of a dataset (in a geojson Kepler style)
+    /api/test/        -> request to check connection                                          -> send back « test »                     DONE
+    /api/conf/        -> request for default configuration                                    -> send back the recorded Kepler configuration  DONE
+    /api/conf/(POST)  -> request for storing a new default configuration (new_configuration)  -> send back the recorded Kepler configuration  DONE
+    /api/data/${DataType}/${Datum}  -> request to get the data of a dataset (in a geojson Kepler style)
  */
+
+//  /api/test
+app.get('/api/test/', (req, res) => {
+  res.send('test')
+});
 
 //  /api/conf
 app.post('/api/conf/', (req, res) => {
@@ -38,6 +42,28 @@ app.post('/api/conf/', (req, res) => {
     res.send({ "data":DataSources.getDataSources(), "KeplerConfiguration":KeplerConfiguration.getConfiguration()})
   }
 });
+
+//  /api/data/${DataType}/${Datum}
+app.get('/api/data/:dataType/:dataWanted/', function(req, res) {
+  // Access userId via: req.params.userId
+  // Access bookId via: req.params.bookId
+  res.send(req.params);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.post('/api/users', function(req, res) {
   /*
