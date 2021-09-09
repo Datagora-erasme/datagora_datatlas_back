@@ -17,6 +17,8 @@ let app = express()
 const KeplerConfiguration = require('./KeplerConfiguration')
 const DataSources = require('./DataSources')
 
+const DataNotion = require('./src/helpers/notion')
+
 app.use(express.json())
 
 const has = Object.prototype.hasOwnProperty;
@@ -44,13 +46,19 @@ app.post('/api/conf/', (req, res) => {
 });
 
 //  /api/data/${DataType}/${Datum}
-app.get('/api/data/:dataType/:dataWanted/', function(req, res) {
+app.get('/api/data/:dataType/:dataWanted/', async function(req, res) {
   if(req.params.dataType==='notion'){ // todo must be automatically done : if == notion,
+    const asynchronousFunction = async () => {
+      const notionContent = DataNotion.getData()
+      res.send(notionContent)
+    }
+
+
 
   }
   // Access userId via: req.params.userId
   // Access bookId via: req.params.bookId
-  res.send(req.params);
+  //res.send(req.params);
 });
 
 app.listen(3000); // todo port in env variable
