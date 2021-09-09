@@ -13,6 +13,9 @@
  */
 const express = require('express') // Webserver
 let app = express()
+var request = require('request');
+require('dotenv').config();
+
 
 const KeplerConfiguration = require('./KeplerConfiguration')
 const DataSources = require('./DataSources')
@@ -46,14 +49,21 @@ app.post('/api/conf/', (req, res) => {
 });
 
 //  /api/data/${DataType}/${Datum}
-app.get('/api/data/:dataType/:dataWanted/', async function(req, res) {
-  if(req.params.dataType==='notion'){ // todo must be automatically done : if == notion,
-    const asynchronousFunction = async () => {
-      const notionContent = DataNotion.getData()
-      res.send(notionContent)
-    }
-
-
+app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
+  if (req.params.dataType === 'notion') { // todo must be automatically done : if == notion,
+    // todo : deport this in a module !
+    request({
+      url: 'https://api.notion.com/v1/databases/68a69714137041deb0112e541a9d12b3/query',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Notion-Version': '2021-08-16',
+        'Authorization': 'Bearer ' + process.env.NOTION_API_KEY
+      }
+    }, function (error, response, body) {
+      const rawDataFromNotion = JSON.parse(body).results
+      res.send(DataNotion.toGEOjson(rawDataFromNotion)); // todo : this is supposed to already be a json object.
+    });
 
   }
   // Access userId via: req.params.userId
