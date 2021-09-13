@@ -23,7 +23,6 @@ const DataSources = require('./DataSources')
 const DataNotion = require('./src/helpers/notion')
 
 app.use(express.json())
-res.header("Access-Control-Allow-Origin", "*");
 const has = Object.prototype.hasOwnProperty;
 
 /*
