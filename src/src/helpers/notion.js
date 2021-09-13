@@ -135,11 +135,14 @@ module.exports.toGEOjson = function(rawData) {
       "13":datum.properties["public-cible"]["multi_select"],
       "14":datum.properties["echelle-territoriale"]["multi_select"],
       "15":datum.properties['image du lieu']["files"][0]==null ? '' : datum.properties['image du lieu']["files"][0]["file"]["url"],
+      "16":datum.properties["contributeur-membre-structure ?"]["select"],
+      "17":datum.properties["nom-contributeur"]["rich_text"],
+      "18":datum.properties["email-contributeur"]["email"],
       "20":datum.properties["latitude"]["number"],
       "21":datum.properties["longitude"]["number"]
     }
     rows.push(newDatum)
-    console.log(datum.properties["image du lieu"]["files"][0])
+    console.log(datum.properties["email-contributeur"])
     console.log('toto')
   });
 
