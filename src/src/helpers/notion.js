@@ -129,7 +129,7 @@ module.exports.toGEOjson = function(rawData) {
       "7":datum.properties["email-structure"]["email"],
       "8":datum.properties["telephone-structure"]["phone_number"],
       "9":datum.properties["reseau-social_principal"]==null ? '' : datum.properties["reseau-social_principal"]["url"],
-      "10":datum.properties["type-structure"]["select"],
+      "10":datum.properties['type-structure']["select"]==null ? '' : datum.properties['type-structure']["select"]["name"],
       "11":datum.properties["activites"]["multi_select"],
       "12":datum.properties["expertise"]["multi_select"],
       "13":datum.properties["public-cible"]["multi_select"],
@@ -142,7 +142,7 @@ module.exports.toGEOjson = function(rawData) {
       "21":datum.properties["longitude"]["number"]
     }
     rows.push(newDatum)
-    console.log(datum.properties["email-contributeur"])
+    console.log(datum.properties["type-structure"]["select"])
     console.log('toto')
   });
 
