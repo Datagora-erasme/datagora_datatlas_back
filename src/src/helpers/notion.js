@@ -123,9 +123,10 @@ module.exports.toGEOjson = function(rawData) {
       "1":datum.properties['saisie interne ou externe ?']["select"]==null ? '' : datum.properties['saisie interne ou externe ?']["select"]["name"],
       "2":datum.properties['statut']["select"]==null ? '' : datum.properties['statut']["select"]["name"],
       "3":datum.properties['nom-structure']["title"][0]==null ? '' : datum.properties['nom-structure']["title"][0]["text"]["content"],
+      "4":datum.properties['description']["rich_text"][0]==null ? '' : datum.properties['description']["rich_text"][0]["text"]["content"],
     }
     rows.push(newDatum)
-    //console.log(datum.properties['nom-structure']["title"][0]["text"]["content"])
+    //console.log(datum.properties["description"]["rich_text"][0]["text"]["content"])
     console.log('toto')
   });
 
