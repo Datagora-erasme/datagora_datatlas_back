@@ -114,46 +114,23 @@ module.exports.toGEOjson = function(rawData) {
       "format": "",
       "type": "number"
     }
-  ];
-  let rows = []; // todo try to use the spread operator
+  ]
+  let rows = []
+
+  rawData.forEach((datum) => {
+    const newDatum = {
+      "0":datum.properties["date-ajout"]["created_time"],
+      "1":datum.properties['saisie interne ou externe ?']["select"]==null ? '' : datum.properties['saisie interne ou externe ?']["select"]["name"],
+      "2":datum.properties['statut']["select"]==null ? '' : datum.properties['statut']["select"]["name"],
+      "3":datum.properties['nom-structure']["title"][0]==null ? '' : datum.properties['nom-structure']["title"][0]["text"]["content"],
+    }
+    rows.push(newDatum)
+    //console.log(datum.properties['nom-structure']["title"][0]["text"]["content"])
+    console.log('toto')
+  });
 
   return {
     "fields": notionFields,
-    "rows": [
-      {
-        "0": 7024,
-        "1": "Bancel / Chevreul",
-        "2": "Rue Bancel",
-        "3": "Rue Chevreul",
-        "4": "Lyon 7 ème",
-        "5": 24,
-        "6": 21,
-        "7": "",
-        "8": "Itinéraire cyclable",
-        "9": "Oui",
-        "10": "",
-        "11": 1,
-        "12": "69387",
-        "13": 45.74852028673056,
-        "14": 4.840524571672513
-      },
-      {
-        "0": 7024,
-        "1": "Bancel / Chevreul",
-        "2": "Rue Bancel",
-        "3": "Rue Chevreul",
-        "4": "Lyon 7 ème",
-        "5": 24,
-        "6": 21,
-        "7": "",
-        "8": "Itinéraire cyclable",
-        "9": "Oui",
-        "10": "",
-        "11": 1,
-        "12": "69387",
-        "13": 45.74852028673056,
-        "14": 4.840524571672513
-      }
-    ]
+    "rows": rows
   };
 }
