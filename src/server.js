@@ -12,8 +12,10 @@
     Imports
  */
 const express = require('express') // Webserver
+let cors = require('cors')
 let app = express()
-var request = require('request');
+app.use(cors())
+let request = require('request');
 require('dotenv').config();
 
 
