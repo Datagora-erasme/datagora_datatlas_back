@@ -133,11 +133,13 @@ module.exports.toGEOjson = function(rawData) {
       "11":datum.properties["activites"]["multi_select"],
       "12":datum.properties["expertise"]["multi_select"],
       "13":datum.properties["public-cible"]["multi_select"],
+      "14":datum.properties["echelle-territoriale"]["multi_select"],
+      "15":datum.properties['image du lieu']["files"][0]==null ? '' : datum.properties['image du lieu']["files"][0]["file"]["url"],
       "20":datum.properties["latitude"]["number"],
       "21":datum.properties["longitude"]["number"]
     }
     rows.push(newDatum)
-    console.log(datum.properties["expertise"]["multi_select"])
+    console.log(datum.properties["image du lieu"]["files"][0])
     console.log('toto')
   });
 
