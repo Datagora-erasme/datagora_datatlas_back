@@ -274,8 +274,6 @@ module.exports.mediationtoGEOjson = function(rawData) {
       "18":datum.properties["longitude"]["number"]
     }
     rows.push(newDatum)
-    console.log(datum.properties["nom-contributeur"])
-    console.log('toto')
   });
 
   return {
