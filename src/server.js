@@ -36,12 +36,12 @@ const has = Object.prototype.hasOwnProperty;
  */
 
 //  /api/test
-app.get('/api/test/', (req, res) => {
+app.get('/api/test/', (req, res, next) => {
   res.send('test')
 });
 
 //  /api/conf
-app.post('/api/conf/', (req, res) => {
+app.post('/api/conf/', (req, res, next) => {
   if (has.call(req.query, "new_configuration")){
     KeplerConfiguration.storeConfiguration(req.query.new_configuration)
   } else {
@@ -50,7 +50,7 @@ app.post('/api/conf/', (req, res) => {
 });
 
 //  /api/data/${DataType}/${Datum}
-app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
+app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
   if (req.params.dataType === 'notion') { // todo must be automatically done : if == notion,
     // todo : deport this in a module !
     if(req.params.dataWanted ==='notion_tiga'){
@@ -82,7 +82,6 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
     } else {
       res.send("unknown route")
     }
-
   }
 });
 
