@@ -128,12 +128,14 @@ module.exports.toGEOjson = function(rawData) {
       "6":datum.properties['adresse']["rich_text"][0]==null ? '' : datum.properties['adresse']["rich_text"][0]["plain_text"],
       "7":datum.properties["email-structure"]["email"],
       "8":datum.properties["telephone-structure"]["phone_number"],
-      "9":datum.properties["activites"]["multi_select"], // todo voir avec Yassin si réécriture nécessaire
+      "9":datum.properties["reseau-social_principal"]==null ? '' : datum.properties["reseau-social_principal"]["url"],
+      "10":datum.properties["type_structure"],
+      "11":datum.properties["activites"]["multi_select"], // todo voir avec Yassin si réécriture nécessaire
       "20":datum.properties["latitude"]["number"],
       "21":datum.properties["longitude"]["number"]
     }
     rows.push(newDatum)
-    console.log(datum.properties["latitude"]["number"])
+    console.log(datum.properties["reseau-social_principal"])
     console.log('toto')
   });
 
