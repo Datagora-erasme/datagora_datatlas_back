@@ -25,7 +25,6 @@ const DataSources = require('./DataSources')
 const DataNotion = require('./src/helpers/notion')
 
 app.use(express.json())
-
 const has = Object.prototype.hasOwnProperty;
 
 /*
