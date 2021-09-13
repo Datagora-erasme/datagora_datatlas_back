@@ -277,7 +277,7 @@ module.exports.mediationtoGEOjson = function(rawData) {
   });
 
   return {
-    "fields": ""/*notionFields*/,
+    "fields": notionFields,
     "rows": rows
   };
 }
