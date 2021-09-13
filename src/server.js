@@ -63,11 +63,11 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
         }
       }, function (error, response, body) {
         const rawDataFromNotion = JSON.parse(body).results
-        res.send(DataNotion.toGEOjson(rawDataFromNotion)); // todo : this is supposed to already be a json object.
+        res.send(DataNotion.TIGAtoGEOjson(rawDataFromNotion)); // todo : this is supposed to already be a json object.
       });
     } else if(req.params.dataWanted ==='notion_mediation'){
       request({
-        url: 'https://api.notion.com/v1/databases/68a69714137041deb0112e541a9d12b3/query',
+        url: 'https://api.notion.com/v1/databases/8dc9e3a344f54e4db756917acf047af3/query',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
         }
       }, function (error, response, body) {
         const rawDataFromNotion = JSON.parse(body).results
-        res.send(DataNotion.toGEOjson(rawDataFromNotion)); // todo : this is supposed to already be a json object.
+        res.send(DataNotion.mediationtoGEOjson(rawDataFromNotion)); // todo : this is supposed to already be a json object.
       });
     } else {
       res.send("unknown route")

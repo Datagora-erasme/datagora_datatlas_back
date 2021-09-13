@@ -2,7 +2,7 @@
  * Management of the data from notion.so.
  */
 
-module.exports.toGEOjson = function(rawData) {
+module.exports.TIGAtoGEOjson = function(rawData) {
   const notionFields = [
     {
       "name": "date-ajout",
@@ -142,12 +142,144 @@ module.exports.toGEOjson = function(rawData) {
       "21":datum.properties["longitude"]["number"]
     }
     rows.push(newDatum)
-    console.log(datum.properties["type-structure"]["select"])
-    console.log('toto')
+    //console.log(datum.properties["type-structure"]["select"])
   });
 
   return {
     "fields": notionFields,
+    "rows": rows
+  };
+}
+
+module.exports.mediationtoGEOjson = function(rawData) {
+  const notionFields = [
+    {
+      "name": "date-ajout",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "saisie interne ou externe ?",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "statut",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "nom-evenement",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "description",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "site-web",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "adresse",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "email-event",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "telephone-event",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "type_event",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "publics",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "date-debut",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "date-fin",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "image-event",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "contributeur-membre-structure ?",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "nom-contributeur",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "email-contributeur",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "latitude",
+      "format": "",
+      "type": "number"
+    },
+    {
+      "name": "longitude",
+      "format": "",
+      "type": "number"
+    }
+  ]
+  let rows = []
+
+  rawData.forEach((datum) => {
+    const newDatum = {
+      "0":datum.properties["date-ajout"]["created_time"],
+      "1":datum.properties['saisie interne ou externe ?']["select"]==null ? '' : datum.properties['saisie interne ou externe ?']["select"]["name"],
+      "2":datum.properties['statut']["select"]==null ? '' : datum.properties['statut']["select"]["name"],
+      "3":datum.properties['nom-evenement']["title"][0]==null ? '' : datum.properties['nom-evenement']["title"][0]["text"]["content"],
+      "4":datum.properties['description']["rich_text"][0]==null ? '' : datum.properties['description']["rich_text"][0]["text"]["content"],
+      "5":datum.properties["site-web"]["url"],
+      "6":datum.properties['adresse']["rich_text"][0]==null ? '' : datum.properties['adresse']["rich_text"][0]["plain_text"],
+      "7":datum.properties["email-event"]["email"],
+      "8":datum.properties["telephone-event"]["phone_number"],
+      "9":datum.properties['type-event']["multi_select"]==null ? '' : datum.properties['type-event']["multi_select"],
+      "10":datum.properties['publics']["multi_select"]==null ? '' : datum.properties['publics']["multi_select"],
+      "11":datum.properties['date-debut']==null ? '' : datum.properties['date-debut']["date"]["start"],
+      "12":datum.properties['date-fin']==null ? '' : datum.properties['date-fin']["date"]["start"],
+      "13":datum.properties['image-event']["files"][0]==null ? '' : datum.properties['image-event']["files"][0]["file"]["url"],
+      "14":datum.properties["contributeur-membre-structure ?"]["select"],
+      "15":datum.properties["nom-contributeur"]["rich_text"],
+      "16":datum.properties["email-contributeur"]["email"],
+      "17":datum.properties["latitude"]["number"],
+      "18":datum.properties["longitude"]["number"]
+    }
+    rows.push(newDatum)
+    console.log(datum.properties["nom-contributeur"])
+    console.log('toto')
+  });
+
+  return {
+    "fields": ""/*notionFields*/,
     "rows": rows
   };
 }
