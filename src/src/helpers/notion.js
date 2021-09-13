@@ -126,9 +126,11 @@ module.exports.toGEOjson = function(rawData) {
       "4":datum.properties['description']["rich_text"][0]==null ? '' : datum.properties['description']["rich_text"][0]["text"]["content"],
       "5":datum.properties["site-web"]["url"],
       "6":datum.properties['adresse']["rich_text"][0]==null ? '' : datum.properties['adresse']["rich_text"][0]["plain_text"],
+      "7":datum.properties["email-structure"]["email"],
+      "8":datum.properties["telephone-structure"]["phone_number"],
     }
     rows.push(newDatum)
-    console.log(datum.properties["adresse"])
+    console.log(datum.properties["telephone-structure"])
     console.log('toto')
   });
 
