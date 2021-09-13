@@ -5,6 +5,6 @@
 module.exports.getDataSources = () => {
     return {
         "notion_tiga":"/api/data/notion/notion_tiga/",
-        "nom2":"route2"
+        "notion_mediation":"/api/data/notion/notion_mediation/"
     };
 };

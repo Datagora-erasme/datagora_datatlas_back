@@ -52,23 +52,37 @@ app.post('/api/conf/', (req, res) => {
 app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
   if (req.params.dataType === 'notion') { // todo must be automatically done : if == notion,
     // todo : deport this in a module !
-    request({
-      url: 'https://api.notion.com/v1/databases/68a69714137041deb0112e541a9d12b3/query',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Notion-Version': '2021-08-16',
-        'Authorization': 'Bearer ' + process.env.NOTION_API_KEY
-      }
-    }, function (error, response, body) {
-      const rawDataFromNotion = JSON.parse(body).results
-      res.send(DataNotion.toGEOjson(rawDataFromNotion)); // todo : this is supposed to already be a json object.
-    });
+    if(req.params.dataWanted ==='notion_tiga'){
+      request({
+        url: 'https://api.notion.com/v1/databases/68a69714137041deb0112e541a9d12b3/query',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Notion-Version': '2021-08-16',
+          'Authorization': 'Bearer ' + process.env.NOTION_API_KEY
+        }
+      }, function (error, response, body) {
+        const rawDataFromNotion = JSON.parse(body).results
+        res.send(DataNotion.toGEOjson(rawDataFromNotion)); // todo : this is supposed to already be a json object.
+      });
+    } else if(req.params.dataWanted ==='notion_mediation'){
+      request({
+        url: 'https://api.notion.com/v1/databases/68a69714137041deb0112e541a9d12b3/query',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Notion-Version': '2021-08-16',
+          'Authorization': 'Bearer ' + process.env.NOTION_API_KEY
+        }
+      }, function (error, response, body) {
+        const rawDataFromNotion = JSON.parse(body).results
+        res.send(DataNotion.toGEOjson(rawDataFromNotion)); // todo : this is supposed to already be a json object.
+      });
+    } else {
+      res.send("unknown route")
+    }
 
   }
-  // Access userId via: req.params.userId
-  // Access bookId via: req.params.bookId
-  //res.send(req.params);
 });
 
 app.listen(3000); // todo port in env variable
