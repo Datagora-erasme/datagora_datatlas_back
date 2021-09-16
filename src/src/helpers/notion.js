@@ -113,6 +113,11 @@ module.exports.TIGAtoGEOjson = function(rawData) {
       "name": "longitude",
       "format": "",
       "type": "number"
+    },
+    {
+      "name": "icon",
+      "format": "",
+      "type": "string"
     }
   ]
   let rows = []
@@ -139,7 +144,8 @@ module.exports.TIGAtoGEOjson = function(rawData) {
       "17":datum.properties["nom-contributeur"]["rich_text"],
       "18":datum.properties["email-contributeur"]["email"],
       "20":datum.properties["latitude"]["number"],
-      "21":datum.properties["longitude"]["number"]
+      "21":datum.properties["longitude"]["number"],
+      "22":datum.properties['icon']["rich_text"][0]==null ? '' : datum.properties['icon']["rich_text"][0]["plain_text"],
     }
     rows.push(newDatum)
     //console.log(datum.properties["type-structure"]["select"])
@@ -247,6 +253,11 @@ module.exports.mediationtoGEOjson = function(rawData) {
       "name": "longitude",
       "format": "",
       "type": "number"
+    },
+    {
+      "name": "icon",
+      "format": "",
+      "type": "string"
     }
   ]
   let rows = []
@@ -271,7 +282,8 @@ module.exports.mediationtoGEOjson = function(rawData) {
       "15":datum.properties["nom-contributeur"]["rich_text"],
       "16":datum.properties["email-contributeur"]["email"],
       "17":datum.properties["latitude"]["number"],
-      "18":datum.properties["longitude"]["number"]
+      "18":datum.properties["longitude"]["number"],
+      "19":datum.properties['icon']["rich_text"][0]==null ? '' : datum.properties['icon']["rich_text"][0]["plain_text"],
     }
     rows.push(newDatum)
   });
