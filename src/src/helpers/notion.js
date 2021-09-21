@@ -2,6 +2,7 @@
  * Management of the data from notion.so.
  */
 
+const request = require('request')
 module.exports.TIGAtoGEOjson = function(rawData) {
   const notionFields = [
     {
@@ -292,4 +293,25 @@ module.exports.mediationtoGEOjson = function(rawData) {
     "fields": notionFields,
     "rows": rows
   };
+}
+
+module.exports.notionRequest = function (id_notion_table) {
+  return new Promise(function (resolve, reject) {
+    request({
+      url: 'https://api.notion.com/v1/databases/' + id_notion_table + '/query',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Notion-Version': '2021-08-16',
+        'Authorization': 'Bearer ' + process.env.NOTION_API_KEY
+      }
+    }, function (error, response, body) {
+      const rawDataFromNotion = JSON.parse(body).results
+      if (rawDataFromNotion !== null){
+        resolve(rawDataFromNotion)
+      } else {
+        reject("error from notion request")
+      }
+    });
+  })
 }

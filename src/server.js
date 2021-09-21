@@ -15,7 +15,7 @@ const express = require('express') // Webserver
 let cors = require('cors')
 let app = express()
 app.use(cors())
-let request = require('request');
+
 require('dotenv').config();
 
 
@@ -52,35 +52,16 @@ app.post('/api/conf/', (req, res, next) => {
 //  /api/data/${DataType}/${Datum}
 app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
   if (req.params.dataType === 'notion') { // todo must be automatically done : if == notion,
-    // todo : deport this in a module !
     if(req.params.dataWanted ==='notion_tiga'){
-      request({
-        url: 'https://api.notion.com/v1/databases/68a69714137041deb0112e541a9d12b3/query',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Notion-Version': '2021-08-16',
-          'Authorization': 'Bearer ' + process.env.NOTION_API_KEY
-        }
-      }, function (error, response, body) {
-        const rawDataFromNotion = JSON.parse(body).results
-        res.send(DataNotion.TIGAtoGEOjson(rawDataFromNotion)); // todo : this is supposed to already be a json object.
-      });
+      DataNotion.notionRequest('68a69714137041deb0112e541a9d12b3').then(function (response) {
+        res.send(DataNotion.TIGAtoGEOjson(response))
+      })
     } else if(req.params.dataWanted ==='notion_mediation'){
-      request({
-        url: 'https://api.notion.com/v1/databases/8dc9e3a344f54e4db756917acf047af3/query',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Notion-Version': '2021-08-16',
-          'Authorization': 'Bearer ' + process.env.NOTION_API_KEY
-        }
-      }, function (error, response, body) {
-        const rawDataFromNotion = JSON.parse(body).results
-        res.send(DataNotion.mediationtoGEOjson(rawDataFromNotion)); // todo : this is supposed to already be a json object.
-      });
+      DataNotion.notionRequest('8dc9e3a344f54e4db756917acf047af3').then(function (response) {
+        res.send(DataNotion.mediationtoGEOjson(response))
+      })
     } else {
-      res.send("unknown route")
+      res.send("unknown notion route")
     }
   }
 });
