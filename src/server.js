@@ -3,12 +3,6 @@
  */
 
 /*
-    Configs.
-    TODO : put those configs in the env variables for deployments.
- */
-// const port
-
-/*
     Imports
  */
 const express = require('express') // Webserver
@@ -66,4 +60,4 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
   }
 });
 
-app.listen(3000); // todo port in env variable
+app.listen(process.env.DATATLAS_BACK_END_PORT); // todo port in env variable
