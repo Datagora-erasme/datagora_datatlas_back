@@ -124,32 +124,35 @@ module.exports.TIGAtoGEOjson = function(rawData) {
   let rows = []
 
   rawData.forEach((datum) => {
-    const newDatum = {
-      "0":datum.properties["date-ajout"]["created_time"],
-      "1":datum.properties['saisie interne ou externe ?']["select"]==null ? '' : datum.properties['saisie interne ou externe ?']["select"]["name"],
-      "2":datum.properties['statut']["select"]==null ? '' : datum.properties['statut']["select"]["name"],
-      "3":datum.properties['nom-structure']["title"][0]==null ? '' : datum.properties['nom-structure']["title"][0]["text"]["content"],
-      "4":datum.properties['description']["rich_text"][0]==null ? '' : datum.properties['description']["rich_text"][0]["text"]["content"],
-      "5":datum.properties["site-web"]["url"],
-      "6":datum.properties['adresse']["rich_text"][0]==null ? '' : datum.properties['adresse']["rich_text"][0]["plain_text"],
-      "7":datum.properties["email-structure"]["email"],
-      "8":datum.properties["telephone-structure"]["phone_number"],
-      "9":datum.properties["reseau-social_principal"]==null ? '' : datum.properties["reseau-social_principal"]["url"],
-      "10":datum.properties['type-structure']["select"]==null ? '' : datum.properties['type-structure']["select"]["name"],
-      "11":datum.properties["activites"]["multi_select"],
-      "12":datum.properties["expertise"]["multi_select"],
-      "13":datum.properties["public-cible"]["multi_select"],
-      "14":datum.properties["echelle-territoriale"]["multi_select"],
-      "15":datum.properties['image du lieu']["files"][0]==null ? '' : datum.properties['image du lieu']["files"][0]["file"]["url"],
-      "16":datum.properties["contributeur-membre-structure ?"]["select"],
-      "17":datum.properties["nom-contributeur"]["rich_text"],
-      "18":datum.properties["email-contributeur"]["email"],
-      "20":datum.properties["latitude"]["number"],
-      "21":datum.properties["longitude"]["number"],
-      "22":datum.properties['icon']["rich_text"][0]==null ? '' : datum.properties['icon']["rich_text"][0]["plain_text"],
+    // We only keep rows which « statut » field is equal to « Validé »
+    if(datum.properties['statut']["select"]!=null && datum.properties['statut']["select"]["name"]==='Validé'){
+      const newDatum = {
+        "0":datum.properties["date-ajout"]["created_time"],
+        "1":datum.properties['saisie interne ou externe ?']["select"]==null ? '' : datum.properties['saisie interne ou externe ?']["select"]["name"],
+        "2":datum.properties['statut']["select"]==null ? '' : datum.properties['statut']["select"]["name"],
+        "3":datum.properties['nom-structure']["title"][0]==null ? '' : datum.properties['nom-structure']["title"][0]["text"]["content"],
+        "4":datum.properties['description']["rich_text"][0]==null ? '' : datum.properties['description']["rich_text"][0]["text"]["content"],
+        "5":datum.properties["site-web"]["url"],
+        "6":datum.properties['adresse']["rich_text"][0]==null ? '' : datum.properties['adresse']["rich_text"][0]["plain_text"],
+        "7":datum.properties["email-structure"]["email"],
+        "8":datum.properties["telephone-structure"]["phone_number"],
+        "9":datum.properties["reseau-social_principal"]==null ? '' : datum.properties["reseau-social_principal"]["url"],
+        "10":datum.properties['type-structure']["select"]==null ? '' : datum.properties['type-structure']["select"]["name"],
+        "11":datum.properties["activites"]["multi_select"],
+        "12":datum.properties["expertise"]["multi_select"],
+        "13":datum.properties["public-cible"]["multi_select"],
+        "14":datum.properties["echelle-territoriale"]["multi_select"],
+        "15":datum.properties['image du lieu']["files"][0]==null ? '' : datum.properties['image du lieu']["files"][0]["file"]["url"],
+        "16":datum.properties["contributeur-membre-structure ?"]["select"],
+        "17":datum.properties["nom-contributeur"]["rich_text"],
+        "18":datum.properties["email-contributeur"]["email"],
+        "20":datum.properties["latitude"]["number"],
+        "21":datum.properties["longitude"]["number"],
+        "22":datum.properties['icon']["rich_text"][0]==null ? '' : datum.properties['icon']["rich_text"][0]["plain_text"],
+      }
+      rows.push(newDatum)
+      //console.log(datum.properties["type-structure"]["select"])
     }
-    rows.push(newDatum)
-    //console.log(datum.properties["type-structure"]["select"])
   });
 
   return {
@@ -264,29 +267,32 @@ module.exports.mediationtoGEOjson = function(rawData) {
   let rows = []
 
   rawData.forEach((datum) => {
-    const newDatum = {
-      "0":datum.properties["date-ajout"]["created_time"],
-      "1":datum.properties['saisie interne ou externe ?']["select"]==null ? '' : datum.properties['saisie interne ou externe ?']["select"]["name"],
-      "2":datum.properties['statut']["select"]==null ? '' : datum.properties['statut']["select"]["name"],
-      "3":datum.properties['nom-evenement']["title"][0]==null ? '' : datum.properties['nom-evenement']["title"][0]["text"]["content"],
-      "4":datum.properties['description']["rich_text"][0]==null ? '' : datum.properties['description']["rich_text"][0]["text"]["content"],
-      "5":datum.properties["site-web"]["url"],
-      "6":datum.properties['adresse']["rich_text"][0]==null ? '' : datum.properties['adresse']["rich_text"][0]["plain_text"],
-      "7":datum.properties["email-event"]["email"],
-      "8":datum.properties["telephone-event"]["phone_number"],
-      "9":datum.properties['type-event']["multi_select"]==null ? '' : datum.properties['type-event']["multi_select"],
-      "10":datum.properties['publics']["multi_select"]==null ? '' : datum.properties['publics']["multi_select"],
-      "11":datum.properties['date-debut']["start"]==null ? '' : datum.properties['date-debut']["date"]["start"],
-      "12":datum.properties['date-fin']["start"]==null ? '' : datum.properties['date-fin']["date"]["start"],
-      "13":datum.properties['image-event']["files"]==null ? '' : datum.properties['image-event']["files"][0]["file"]["url"],
-      "14":datum.properties["contributeur-membre-structure ?"]["select"],
-      "15":datum.properties["nom-contributeur"]["rich_text"],
-      "16":datum.properties["email-contributeur"]["email"],
-      "17":datum.properties["latitude"]["number"],
-      "18":datum.properties["longitude"]["number"],
-      "19":datum.properties['icon']["rich_text"][0]==null ? '' : datum.properties['icon']["rich_text"][0]["plain_text"],
+    // We only keep rows which « statut » field is equal to « Validé »
+    if(datum.properties['statut']["select"]!=null && datum.properties['statut']["select"]["name"]==='Validé'){
+      const newDatum = {
+        "0":datum.properties["date-ajout"]["created_time"],
+        "1":datum.properties['saisie interne ou externe ?']["select"]==null ? '' : datum.properties['saisie interne ou externe ?']["select"]["name"],
+        "2":datum.properties['statut']["select"]==null ? '' : datum.properties['statut']["select"]["name"],
+        "3":datum.properties['nom-evenement']["title"][0]==null ? '' : datum.properties['nom-evenement']["title"][0]["text"]["content"],
+        "4":datum.properties['description']["rich_text"][0]==null ? '' : datum.properties['description']["rich_text"][0]["text"]["content"],
+        "5":datum.properties["site-web"]["url"],
+        "6":datum.properties['adresse']["rich_text"][0]==null ? '' : datum.properties['adresse']["rich_text"][0]["plain_text"],
+        "7":datum.properties["email-event"]["email"],
+        "8":datum.properties["telephone-event"]["phone_number"],
+        "9":datum.properties['type-event']["multi_select"]==null ? '' : datum.properties['type-event']["multi_select"],
+        "10":datum.properties['publics']["multi_select"]==null ? '' : datum.properties['publics']["multi_select"],
+        "11":datum.properties['date-debut']["start"]==null ? '' : datum.properties['date-debut']["date"]["start"],
+        "12":datum.properties['date-fin']["start"]==null ? '' : datum.properties['date-fin']["date"]["start"],
+        "13":datum.properties['image-event']["files"]==null ? '' : datum.properties['image-event']["files"][0]["file"]["url"],
+        "14":datum.properties["contributeur-membre-structure ?"]["select"],
+        "15":datum.properties["nom-contributeur"]["rich_text"],
+        "16":datum.properties["email-contributeur"]["email"],
+        "17":datum.properties["latitude"]["number"],
+        "18":datum.properties["longitude"]["number"],
+        "19":datum.properties['icon']["rich_text"][0]==null ? '' : datum.properties['icon']["rich_text"][0]["plain_text"],
+      }
+      rows.push(newDatum)
     }
-    rows.push(newDatum)
   });
 
   return {
