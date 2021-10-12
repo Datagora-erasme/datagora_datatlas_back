@@ -303,10 +303,8 @@ module.exports.mediationtoGEOjson = function(rawData) {
   });
 
   return {
-    //"fields": notionFields,
-    //"rows": rows
-    "fields": "notionFields",
-    "rows": "rows"
+    "fields": notionFields,
+    "rows": rows
   };
 }
 
