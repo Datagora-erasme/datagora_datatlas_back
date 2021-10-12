@@ -2,6 +2,11 @@
  * Management of the data from notion.so.
  */
 
+/**
+ * Gets the data from https://www.notion.so/68a69714137041deb0112e541a9d12b3?v=45538974b586469e8e649fd5eb0179dd
+ * and sends it bck to the requester.
+ * @type {function(*=, *=, *=): *}
+ */
 const request = require('request')
 module.exports.TIGAtoGEOjson = function(rawData) {
   const notionFields = [
@@ -138,10 +143,10 @@ module.exports.TIGAtoGEOjson = function(rawData) {
         "8":datum.properties["telephone-structure"]["phone_number"],
         "9":datum.properties["reseau-social_principal"]==null ? '' : datum.properties["reseau-social_principal"]["url"],
         "10":datum.properties['type-structure']["select"]==null ? '' : datum.properties['type-structure']["select"]["name"],
-        "11":datum.properties["activites"]["multi_select"],
-        "12":datum.properties["expertise"]["multi_select"],
-        "13":datum.properties["public-cible"]["multi_select"],
-        "14":datum.properties["echelle-territoriale"]["multi_select"],
+        "11":datum.properties['activites']["multi_select"][0]["name"]==null ? '' : datum.properties['activites']["multi_select"][0]["name"], // We only take the first occurency for now.,
+        "12":datum.properties['expertise']["multi_select"][0]===undefined ? '' : datum.properties['expertise']["multi_select"][0]["name"], // We only take the first occurency for now.,
+        "13":datum.properties['public-cible']["multi_select"][0]===undefined ? '' : datum.properties['public-cible']["multi_select"][0]["name"], // We only take the first occurency for now.,
+        "14":datum.properties['echelle-territoriale']["multi_select"][0]===undefined ? '' : datum.properties['echelle-territoriale']["multi_select"][0]["name"], // We only take the first occurency for now.,
         "15":"",
         //"15":datum.properties['image du lieu']["files"][0]==null ? '' : datum.properties['image du lieu']["files"][0]["file"]["url"],
         "16":datum.properties["contributeur-membre-structure ?"]["select"],
@@ -152,7 +157,7 @@ module.exports.TIGAtoGEOjson = function(rawData) {
         "22":datum.properties['icon']["rich_text"][0]==null ? '' : datum.properties['icon']["rich_text"][0]["plain_text"],
       }
       rows.push(newDatum)
-      //console.log(datum.properties["type-structure"]["select"])
+      //console.log(datum.properties['expertise']["multi_select"][0])
     }
   });
 
@@ -286,8 +291,8 @@ module.exports.mediationtoGEOjson = function(rawData) {
         "6":datum.properties['adresse']["rich_text"][0]==null ? '' : datum.properties['adresse']["rich_text"][0]["plain_text"],
         "7":datum.properties["email-event"]["email"],
         "8":datum.properties["telephone-event"]["phone_number"],
-        "9":datum.properties['type-event']["multi_select"]==null ? '' : datum.properties['type-event']["multi_select"],
-        "10":datum.properties['publics']["multi_select"]==null ? '' : datum.properties['publics']["multi_select"],
+        "9":datum.properties['type-event']["multi_select"][0]===undefined ? '' : datum.properties['type-event']["multi_select"][0]["name"], // We only take the first occurency for now.,
+        "10":datum.properties['publics']["multi_select"][0]===undefined ? '' : datum.properties['publics']["multi_select"][0]["name"], // We only take the first occurency for now.,
         "11":datum.properties['date-debut']["start"]==null ? '' : datum.properties['date-debut']["date"]["start"],
         "12":datum.properties['date-fin']["start"]==null ? '' : datum.properties['date-fin']["date"]["start"],
         "13":datum.properties['image-event']["files"]==null ? '' : datum.properties['image-event']["files"][0]["file"]["url"],
