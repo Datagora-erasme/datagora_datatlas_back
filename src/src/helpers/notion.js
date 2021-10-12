@@ -161,6 +161,12 @@ module.exports.TIGAtoGEOjson = function(rawData) {
   };
 }
 
+/**
+ * Gets data from https://www.notion.so/8dc9e3a344f54e4db756917acf047af3?v=c9f6d89dc7334b8c9f9c94f45f53e386
+ * and send it back to the requester.
+ * @param rawData
+ * @returns {{fields: [{name: string, format: string, type: string}, {name: string, format: string, type: string}, {name: string, format: string, type: string}, {name: string, format: string, type: string}, {name: string, format: string, type: string}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], rows: *[]}}
+ */
 module.exports.mediationtoGEOjson = function(rawData) {
   const notionFields = [
     {
@@ -296,8 +302,10 @@ module.exports.mediationtoGEOjson = function(rawData) {
   });
 
   return {
-    "fields": notionFields,
-    "rows": rows
+    //"fields": notionFields,
+    //"rows": rows
+    "fields": "notionFields",
+    "rows": "rows"
   };
 }
 

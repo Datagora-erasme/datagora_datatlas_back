@@ -27,6 +27,7 @@ const has = Object.prototype.hasOwnProperty;
     /api/conf/        -> request for default configuration                                    -> send back the recorded Kepler configuration  DONE
     /api/conf/(POST)  -> request for storing a new default configuration (new_configuration)  -> send back the recorded Kepler configuration  DONE
     /api/data/${DataType}/${Datum}  -> request to get the data of a dataset (in a geojson Kepler style)
+    /api/icons/
  */
 
 //  /api/test
@@ -60,4 +61,4 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
   }
 });
 
-app.listen(process.env.DATATLAS_BACK_END_PORT); // todo port in env variable
+app.listen(process.env.DATATLAS_BACK_END_PORT);
