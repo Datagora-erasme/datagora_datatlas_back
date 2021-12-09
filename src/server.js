@@ -46,9 +46,9 @@ app.get('/api/test/', (req, res, next) => {
 });
 
 
-//  /api/retrieve/conf/:confWanted/
+//  /api/conf/:confWanted/
 // todo : check security : anyone can send data...
-app.get('/api/retrieve/conf/:confWanted/', function (req, res, next) {
+app.get('/api/conf/:confWanted/', function (req, res, next) {
   if (req.params.confWanted === 'kepler') {
     res.send(KeplerConfiguration.getKeplerConfiguration())
   } else if (req.params.confWanted === 'instance') {
