@@ -23,11 +23,10 @@ const has = Object.prototype.hasOwnProperty;
 
 /*
     Routes
-    /api/test/        -> request to check connection                                          -> send back « test »                     DONE
-    /api/conf/        -> request for default configuration                                    -> send back the recorded Kepler configuration  DONE
-    /api/conf/(POST)  -> request for storing a new default configuration (new_configuration)  -> send back the recorded Kepler configuration  DONE
+    /api/test/          -> request to check connection                                          -> send back « test »                     DONE
+    /api/conf/retrieve/ -> request for default configuration                                    -> send back the recorded Kepler configuration
+    /api/conf/store/    -> request for storing a new default configuration (new_configuration)  -> send back the two recorded Kepler configuration
     /api/data/${DataType}/${Datum}  -> request to get the data of a dataset (in a geojson Kepler style)
-    /api/icons/
  */
 
 //  /api/test
@@ -35,17 +34,46 @@ app.get('/api/test/', (req, res, next) => {
   res.send('test')
 });
 
-//  /api/conf
-app.post('/api/conf/', (req, res, next) => {
-  if (has.call(req.query, "new_configuration")){
-    KeplerConfiguration.storeConfiguration(req.query.new_configuration)
-  } else {
+//  /api/conf/store
+// todo : check security : anyone can send data...
+app.post('/api/conf/store/', (req, res, next) => {
+  console.log('toto');
+  const body = req.body;
+  console.log(body);
+  const jsonified = res.json(body);
+  console.log(jsonified);
+  if (has.call(req.body, 'configuration_kepler')){
+    KeplerConfiguration.storeConfigurationKepler(req.query.configuration_kepler)
+  }
+  if (has.call(req.body, 'configuration_instance')){
+    KeplerConfiguration.storeConfigurationLayers(req.body.configuration_layer)
+  }
+
+  /*else {
     res.send({ "data":DataSources.getDataSources(), "KeplerConfiguration":KeplerConfiguration.getConfiguration()})
   }
+  */
+});
+
+//  /api/conf/retrieve
+// todo : check security : anyone can send data...
+app.get ('/api/conf/retrieve/', (req, res, next) => {
+  if (has.call(req.query, 'configuration_kepler')){
+    res.send({ "data":DataSources.getDataSources(), "KeplerConfiguration":KeplerConfiguration.getKeplerConfiguration()})
+  }
+  if (has.call(req.query, 'configuration_layer')){
+    res.send({ "data":DataSources.getDataSources(), "LayersConfiguration":KeplerConfiguration.getLayersConfiguration()})
+  }
+
+  /*else {
+    res.send({ "data":DataSources.getDataSources(), "KeplerConfiguration":KeplerConfiguration.getConfiguration()})
+  }
+  */
 });
 
 //  /api/data/${DataType}/${Datum}
 app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
+  console.log(window[req.params.dataType])
   if (req.params.dataType === 'notion') { // todo must be automatically done : if == notion,
     if(req.params.dataWanted ==='notion_tiga'){
       DataNotion.notionRequest('68a69714137041deb0112e541a9d12b3').then(function (response) {
