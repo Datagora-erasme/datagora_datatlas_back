@@ -9,7 +9,7 @@ const fs = require('fs')
  * @returns {string}
  */
 module.exports.getKeplerConfiguration = () => {
-  return readConfFile('data/KeplerConfiguration.json')
+  return JSON.parse(readConfFile('data/KeplerConfiguration.json'))
 }
 
 /**
@@ -17,7 +17,7 @@ module.exports.getKeplerConfiguration = () => {
  * @returns {string}
  */
 module.exports.getLayersConfiguration = () => {
-  return readConfFile('data/LayersConfiguration.json')
+  return JSON.parse(readConfFile('data/LayersConfiguration.json'))
 }
 
 /**
