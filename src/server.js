@@ -9,16 +9,22 @@ const express = require('express') // Webserver
 let cors = require('cors')
 let app = express()
 app.use(cors())
+let multer = require('multer');
+let upload = multer();
 
 require('dotenv').config();
 
 
 const KeplerConfiguration = require('./KeplerConfiguration')
 const DataSources = require('./DataSources')
+app.use(upload.array());
+app.use(express.static('public'));
 
 const DataNotion = require('./src/helpers/notion')
 
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+
 const has = Object.prototype.hasOwnProperty;
 
 /*
@@ -44,52 +50,23 @@ app.get('/api/test/', (req, res, next) => {
 // todo : check security : anyone can send data...
 app.get('/api/retrieve/conf/:confWanted/', function (req, res, next) {
   if (req.params.confWanted === 'kepler') {
-    res.send({ "KeplerConfiguration":KeplerConfiguration.getKeplerConfiguration()})
+    res.send(KeplerConfiguration.getKeplerConfiguration())
   } else if (req.params.confWanted === 'instance') {
-    res.send({ "LayersConfiguration":KeplerConfiguration.getLayersConfiguration()})
+    res.send( KeplerConfiguration.getLayersConfiguration())
   } else {
     res.send('Unknown conf.');
   }
-
-
-  /*
-  if (has.call(req.query, 'configuration_kepler')){
-    res.send({ "data":DataSources.getDataSources(), "KeplerConfiguration":KeplerConfiguration.getKeplerConfiguration()})
-  }
-  if (has.call(req.query, 'configuration_layer')){
-    res.send({ "data":DataSources.getDataSources(), "LayersConfiguration":KeplerConfiguration.getLayersConfiguration()})
-  }
-  */
   next();
-
-  /*else {
-    res.send({ "data":DataSources.getDataSources(), "KeplerConfiguration":KeplerConfiguration.getConfiguration()})
-  }
-  */
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //  /api/conf/store
 // todo : check security : anyone can send data...
 app.post('/api/conf/store/', (req, res, next) => {
+  res.send(req.body);
+  console.log(req.body);
+
+  /*
   const body = req.body;
   const jsonified = res.json(body);
   if (has.call(req.body, 'configuration_kepler')){
@@ -99,11 +76,31 @@ app.post('/api/conf/store/', (req, res, next) => {
     KeplerConfiguration.storeConfigurationLayers(req.body.configuration_layer)
   }
 
+  */
+
   /*else {
     res.send({ "data":DataSources.getDataSources(), "KeplerConfiguration":KeplerConfiguration.getConfiguration()})
   }
   */
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //  /api/data/${DataType}/${Datum}
 app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
