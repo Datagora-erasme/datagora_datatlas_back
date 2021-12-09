@@ -65,8 +65,10 @@ app.get('/api/conf/:confWanted/', function (req, res, next) {
 app.post('/api/conf/:confWanted/', (req, res, next) => {
   if (req.params.confWanted === 'kepler' && has.call(req.body, 'configuration_kepler')){
     KeplerConfiguration.storeConfigurationKepler(req.body.configuration_kepler)
+    res.send();
   } else if (req.params.confWanted === 'instance' && has.call(req.body, 'configuration_instance')){
     KeplerConfiguration.storeConfigurationLayers(req.body.configuration_instance)
+    res.send();
   } else{
     res.send('unknown data');
   }
