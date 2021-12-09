@@ -37,11 +37,8 @@ app.get('/api/test/', (req, res, next) => {
 //  /api/conf/store
 // todo : check security : anyone can send data...
 app.post('/api/conf/store/', (req, res, next) => {
-  console.log('toto');
   const body = req.body;
-  console.log(body);
   const jsonified = res.json(body);
-  console.log(jsonified);
   if (has.call(req.body, 'configuration_kepler')){
     KeplerConfiguration.storeConfigurationKepler(req.query.configuration_kepler)
   }
