@@ -29,9 +29,9 @@ const has = Object.prototype.hasOwnProperty;
 
 /*
     Routes
-    /api/test/          -> request to check connection                                          -> send back « test »                     DONE
-    /api/retrieve/conf/:confWanted/ -> request for a conf data.
-
+GET   /api/test/          -> request to check connection                                          -> send back « test »                     DONE
+GET   /api/conf/:confWanted/ -> request for a conf data.                                                                                          DONE
+POST  /api/conf/:confWanted/ -> request for storing a conf data.                                                                                  DONE
 
 
     /api/conf/retrieve/ -> request for default configuration                                    -> send back the recorded Kepler configuration
@@ -62,26 +62,14 @@ app.get('/api/conf/:confWanted/', function (req, res, next) {
 
 //  /api/conf/store
 // todo : check security : anyone can send data...
-app.post('/api/conf/store/', (req, res, next) => {
-  res.send(req.body);
-  console.log(req.body);
-
-  /*
-  const body = req.body;
-  const jsonified = res.json(body);
-  if (has.call(req.body, 'configuration_kepler')){
-    KeplerConfiguration.storeConfigurationKepler(req.query.configuration_kepler)
+app.post('/api/conf/:confWanted/', (req, res, next) => {
+  if (req.params.confWanted === 'kepler' && has.call(req.body, 'configuration_kepler')){
+    KeplerConfiguration.storeConfigurationKepler(req.body.configuration_kepler)
+  } else if (req.params.confWanted === 'instance' && has.call(req.body, 'configuration_instance')){
+    KeplerConfiguration.storeConfigurationLayers(req.body.configuration_instance)
+  } else{
+    res.send('unknown data');
   }
-  if (has.call(req.body, 'configuration_instance')){
-    KeplerConfiguration.storeConfigurationLayers(req.body.configuration_layer)
-  }
-
-  */
-
-  /*else {
-    res.send({ "data":DataSources.getDataSources(), "KeplerConfiguration":KeplerConfiguration.getConfiguration()})
-  }
-  */
 });
 
 
