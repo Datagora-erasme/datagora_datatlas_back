@@ -89,4 +89,15 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
   }
 });
 
+// Temporary route for Camille's usage.
+app.get('/api/data/camille/', function (req, res, next) {
+  /*
+    This route is used as an example. It has to read a notion page (in our case tiga) and prepare it including multi-selects
+   */
+  DataNotion.notionRequest('68a69714137041deb0112e541a9d12b3').then(function (response) {
+    res.send(DataNotion.TIGAtoGEOjsonMS(response))
+    })
+});
+
+
 app.listen(process.env.DATATLAS_BACK_END_PORT);

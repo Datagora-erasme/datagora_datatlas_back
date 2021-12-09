@@ -8,6 +8,7 @@
  * @type {function(*=, *=, *=): *}
  */
 const request = require('request')
+const fs = require('fs')
 module.exports.TIGAtoGEOjson = function(rawData) {
   const notionFields = [
     {
@@ -147,6 +148,165 @@ module.exports.TIGAtoGEOjson = function(rawData) {
         "12":datum.properties['expertise']["multi_select"][0]===undefined ? '' : datum.properties['expertise']["multi_select"][0]["name"], // We only take the first occurency for now.,
         "13":datum.properties['public-cible']["multi_select"][0]===undefined ? '' : datum.properties['public-cible']["multi_select"][0]["name"], // We only take the first occurency for now.,
         "14":datum.properties['echelle-territoriale']["multi_select"][0]===undefined ? '' : datum.properties['echelle-territoriale']["multi_select"][0]["name"], // We only take the first occurency for now.,
+        "15":"",
+        //"15":datum.properties['image du lieu']["files"][0]==null ? '' : datum.properties['image du lieu']["files"][0]["file"]["url"],
+        "16":datum.properties["contributeur-membre-structure ?"]["select"],
+        "17":datum.properties["nom-contributeur"]["rich_text"],
+        "18":datum.properties["email-contributeur"]["email"],
+        "20":datum.properties["latitude"]["number"],
+        "21":datum.properties["longitude"]["number"],
+        "22":datum.properties['icon']["rich_text"][0]==null ? '' : datum.properties['icon']["rich_text"][0]["plain_text"],
+      }
+      rows.push(newDatum)
+      //console.log(datum.properties['expertise']["multi_select"][0])
+    }
+  });
+
+  return {
+    "fields": notionFields,
+    "rows": rows
+  };
+}
+
+module.exports.TIGAtoGEOjsonMS = function(rawData) {
+  const notionFields = [
+    {
+      "name": "date-ajout",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "saisie interne ou externe ?",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "statut",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "nom-structure",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "description",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "site-web",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "adresse",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "email-structure",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "telephone-structure",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "reseau-social_principal",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "type_structure",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "activites",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "expertise",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "public-cible",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "echelle-territoriale",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "image du lieu",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "contributeur-membre-structure ?",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "nom-contributeur",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "email-contributeur",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "commentaire-private",
+      "format": "",
+      "type": "string"
+    },
+    {
+      "name": "latitude",
+      "format": "",
+      "type": "number"
+    },
+    {
+      "name": "longitude",
+      "format": "",
+      "type": "number"
+    },
+    {
+      "name": "icon",
+      "format": "",
+      "type": "string"
+    }
+  ]
+  let rows = []
+
+  rawData.forEach((datum) => {
+    // We only keep rows which « statut » field is equal to « Validé »
+    if(datum.properties['statut']["select"]!=null && datum.properties['statut']["select"]["name"]==='Validé'){
+      const newDatum = {
+        "0":datum.properties["date-ajout"]["created_time"],
+        "1":datum.properties['saisie interne ou externe ?']["select"]==null ? '' : datum.properties['saisie interne ou externe ?']["select"]["name"],
+        "2":datum.properties['statut']["select"]==null ? '' : datum.properties['statut']["select"]["name"],
+        "3":datum.properties['nom-structure']["title"][0]==null ? '' : datum.properties['nom-structure']["title"][0]["text"]["content"],
+        "4":datum.properties['description']["rich_text"][0]==null ? '' : datum.properties['description']["rich_text"][0]["text"]["content"],
+        "5":datum.properties["site-web"]["url"],
+        "6":datum.properties['adresse']["rich_text"][0]==null ? '' : datum.properties['adresse']["rich_text"][0]["plain_text"],
+        "7":datum.properties["email-structure"]["email"],
+        "8":datum.properties["telephone-structure"]["phone_number"],
+        "9":datum.properties["reseau-social_principal"]==null ? '' : datum.properties["reseau-social_principal"]["url"],
+        "10":datum.properties['type-structure']["select"]==null ? '' : datum.properties['type-structure']["select"]["name"],
+        "11":datum.properties['activites']["multi_select"][0]["name"]==null ? '' : convertJsonArrayToSimpleStringArray(datum.properties['activites']["multi_select"]), // We only take the first occurency for now.,<<<<<<
+        "12":datum.properties['expertise']["multi_select"][0]===undefined ? '' : convertJsonArrayToSimpleStringArray(datum.properties['expertise']["multi_select"]), // We only take the first occurency for now.,
+        "13":datum.properties['public-cible']["multi_select"][0]===undefined ? '' : convertJsonArrayToSimpleStringArray(datum.properties['public-cible']["multi_select"]), // We only take the first occurency for now.,
+        "14":datum.properties['echelle-territoriale']["multi_select"][0]===undefined ? '' : convertJsonArrayToSimpleStringArray(datum.properties['echelle-territoriale']["multi_select"]), // We only take the first occurency for now.,
         "15":"",
         //"15":datum.properties['image du lieu']["files"][0]==null ? '' : datum.properties['image du lieu']["files"][0]["file"]["url"],
         "16":datum.properties["contributeur-membre-structure ?"]["select"],
@@ -332,4 +492,19 @@ module.exports.notionRequest = function (id_notion_table) {
       }
     });
   })
+}
+
+
+
+
+/*                                          METHODS                                                                   */
+
+const convertJsonArrayToSimpleStringArray = (data) => {
+  const arrayMS = [];
+  for(const item of data) {
+    if (item.name!==undefined){
+      arrayMS.push(item.name)
+    }
+  }
+  return arrayMS;
 }
