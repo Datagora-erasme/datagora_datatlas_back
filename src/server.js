@@ -122,3 +122,4 @@ app.get('/api/data/camille/', function (req, res, next) {
 
 
 app.listen(process.env.DATATLAS_BACK_END_PORT);
+console.log("Server started on port :", process.env.DATATLAS_BACK_END_PORT )
