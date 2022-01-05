@@ -98,7 +98,7 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
   if (req.params.dataType === 'notion') { // todo must be automatically done : if == notion,
     if(req.params.dataWanted ==='notion_tiga'){
       DataNotion.notionRequest('68a69714137041deb0112e541a9d12b3').then(function (response) {
-        res.send(DataNotion.TIGAtoGEOjson(response))
+        res.send(DataNotion.TIGAtoGEOjsonMS(response))
       })
     } else if(req.params.dataWanted ==='notion_mediation'){
       DataNotion.notionRequest('8dc9e3a344f54e4db756917acf047af3').then(function (response) {
