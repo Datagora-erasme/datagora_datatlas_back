@@ -308,7 +308,7 @@ module.exports.TIGAtoGEOjsonMS = function(rawData) {
         "13":datum.properties['public-cible']["multi_select"][0]===undefined ? '' : convertJsonArrayToSimpleStringArray(datum.properties['public-cible']["multi_select"]), // We only take the first occurency for now.,
         "14":datum.properties['echelle-territoriale']["multi_select"][0]===undefined ? '' : convertJsonArrayToSimpleStringArray(datum.properties['echelle-territoriale']["multi_select"]), // We only take the first occurency for now.,
         //"15":"",
-        "15":datum?.properties['image du lieu']['rich_text'][0]?.['text']['content'],
+        "15":datum?.properties['image du lieu']['rich_text'][0]?.['text']['link']['url'],
         //"15":datum.properties['image du lieu']["files"][0]==null ? '' : datum.properties['image du lieu']["files"][0]["file"]["url"],
         "16":datum.properties["contributeur-membre-structure ?"]["select"],
         "17":datum.properties["nom-contributeur"]["rich_text"],
