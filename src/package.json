@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "standard && node my-tests.js"
+    "test": "standard && node my-tests.js",
+    "dev" : "nodemon -L server.js"
   },
   "repository": {
     "type": "git",

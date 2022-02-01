@@ -1,0 +1,8 @@
+FROM node:latest
+COPY . /src
+WORKDIR /src/src
+RUN ls
+RUN npm install
+RUN npm install nodemon -g
+CMD [ "npm", "run" "dev" ]
+EXPOSE 3000

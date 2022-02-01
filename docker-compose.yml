@@ -3,11 +3,11 @@ services:
   datatlas-back:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     restart: always
     ports:
-      - 0.0.0.0:3000:3000
+      - 0.0.0.0:3000:4000
     volumes:
       - ./src:/src
-    command: npm start
+    command: npm run dev
     stdin_open: true
