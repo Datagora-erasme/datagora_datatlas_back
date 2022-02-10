@@ -74,31 +74,16 @@ app.post('/api/conf/:confWanted/', (req, res, next) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //  /api/data/${DataType}/${Datum}
 app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
-  //console.log(window[req.params.dataType])
-  if (req.params.dataType === 'notion') { // todo must be automatically done : if == notion,
+  if (req.params.dataType === 'notion') {
+    DataNotion.notionRequest(req.params.dataWanted).then(function (response) {
+      res.send(DataNotion.toGeoJson(response))
+    })
+    /*
     if(req.params.dataWanted ==='notion_tiga'){
       DataNotion.notionRequest('68a69714137041deb0112e541a9d12b3').then(function (response) {
-        res.send(DataNotion.TIGAtoGEOjsonMS(response))
+        res.send(DataNotion.TIGAtoGEOjson(response))
       })
     } else if(req.params.dataWanted ==='notion_mediation'){
       DataNotion.notionRequest('8dc9e3a344f54e4db756917acf047af3').then(function (response) {
@@ -106,9 +91,27 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
       })
     } else {
       res.send("unknown notion route")
-    }
+    }*/
+
+
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Temporary route for Camille's usage.
 app.get('/api/data/camille/', function (req, res, next) {
