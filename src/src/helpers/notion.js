@@ -48,9 +48,9 @@ module.exports.toGeoJson = function(rawData) {
         line['properties'][datum]['multi_select'].forEach((item) => {
           multi_select.push(item['name'])
         })
-        /* Comment one of the two below */ // TODO check with @ysiouda
-        //newDatum[count] = multi_select // If we want all the items in an array.
-        newDatum[count] = multi_select[0] // If we only want the first item.
+        /* Comment one of the two below */
+        newDatum[count] = multi_select // If we want all the items in an array.
+        //newDatum[count] = multi_select[0] // If we only want the first item.
       } else if (line['properties'][datum]['type']==='url'){
         newDatum[count] = line['properties'][datum]['url']
       } else if (line['properties'][datum]['type']==='rich_text'){
