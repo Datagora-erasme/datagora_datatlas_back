@@ -13,69 +13,77 @@ module.exports.toGeoJson = function(rawData) {
   let notionFields = []
   let rows = []
 
-  // N UNKNOWN VARIOUS COLUMN NAMES IN THE NOTION TABLE
-  Object.keys(rawData[0].properties).forEach((datum) => {
-    let typeData
-    if (datum==='latitude' || datum==='longitude'){
-      typeData='number'
-    } else{
-      typeData='string';
-    }
-    const newField = {
-      "name": datum,
-      "format": "",
-      "type": typeData
-    }
-    notionFields.push(newField)
-  })
-
-  rawData.forEach((line) => {
-    let newDatum = {}
-    let count = 0
+  if (rawData) {
+    // N UNKNOWN VARIOUS COLUMN NAMES IN THE NOTION TABLE
     Object.keys(rawData[0].properties).forEach((datum) => {
-      if (line['properties'][datum]['type']==='number'){ // Latitude and longitude (mostly)
-        newDatum[count] = line['properties'][datum]['number']
-      } else if (line['properties'][datum]['type']==='title'){
-        newDatum[count] = line['properties'][datum]['title'][0]['plain_text']
-      } else if (line['properties'][datum]['type']==='select'){
-        let value = ''
-        if (line['properties'][datum]['select']!==null && line['properties'][datum]['select']['name']!==null){
-          value = line['properties'][datum]['select']['name']
-        }
-        newDatum[count] = value
-      } else if (line['properties'][datum]['type']==='multi_select'){
-        let multi_select = []
-        line['properties'][datum]['multi_select'].forEach((item) => {
-          multi_select.push(item['name'])
-        })
-        /* Comment one of the two below */
-        newDatum[count] = multi_select // If we want all the items in an array.
-        //newDatum[count] = multi_select[0] // If we only want the first item.
-      } else if (line['properties'][datum]['type']==='url'){
-        newDatum[count] = line['properties'][datum]['url']
-      } else if (line['properties'][datum]['type']==='rich_text'){
-        if (
-          line['properties'][datum]['rich_text']!==[]
-          && line['properties'][datum]['rich_text'][0]!==null
-          && line['properties'][datum]['rich_text'][0]!==undefined
-          && line['properties'][datum]['rich_text'][0]['plain_text']!==null
-        ) {
-          newDatum[count] = line['properties'][datum]['rich_text'][0]['plain_text']
-        }
-      } else if (line['properties'][datum]['type']==='email'){
-        newDatum[count] = line['properties'][datum]['email']
-      } else if (line['properties'][datum]['type']==='phone_number'){
-        newDatum[count] = line['properties'][datum]['phone_number']
-      } else if (line['properties'][datum]['type']==='created_time'){
-        newDatum[count] = line['properties'][datum]['created_time']
+      let typeData
+      if (datum==='latitude' || datum==='longitude'){
+        typeData='real'
+      } else{
+        typeData='string';
       }
-      else {
-        console.log('unknown type of notion data' + line['properties'][datum]);
+      const newField = {
+        "name": datum,
+        "format": "",
+        "type": typeData
       }
-      count++;
+      notionFields.push(newField)
     })
-    rows.push(newDatum)
-  })
+
+    rawData.forEach((line) => {
+      let newDatum = {}
+      let count = 0
+      Object.keys(rawData[0].properties).forEach((datum) => {
+        if (line['properties'][datum]['type']==='number'){ // Latitude and longitude (mostly)
+          newDatum[count] = line['properties'][datum]['number']
+        } else if (line['properties'][datum]['type']==='title'){
+          newDatum[count] = line['properties'][datum]['title'][0]['plain_text']
+        } else if (line['properties'][datum]['type']==='select'){
+          let value = ''
+          if (line['properties'][datum]['select']!==null && line['properties'][datum]['select']['name']!==null){
+            value = line['properties'][datum]['select']['name']
+          }
+          newDatum[count] = value
+        } else if (line['properties'][datum]['type']==='multi_select'){
+          let multi_select = []
+          line['properties'][datum]['multi_select'].forEach((item) => {
+            multi_select.push(item['name'])
+          })
+          /* Comment one of the two below */
+          newDatum[count] = multi_select // If we want all the items in an array.
+          //newDatum[count] = multi_select[0] // If we only want the first item.
+        } else if (line['properties'][datum]['type']==='url'){
+          newDatum[count] = line['properties'][datum]['url']
+        } else if (line['properties'][datum]['type']==='rich_text'){
+          if (
+            line['properties'][datum]['rich_text']!==[]
+            && line['properties'][datum]['rich_text'][0]!==null
+            && line['properties'][datum]['rich_text'][0]!==undefined
+            && line['properties'][datum]['rich_text'][0]['plain_text']!==null
+          ) {
+            newDatum[count] = line['properties'][datum]['rich_text'][0]['plain_text']
+          }
+        } else if (line['properties'][datum]['type']==='email'){
+          newDatum[count] = line['properties'][datum]['email']
+        } else if (line['properties'][datum]['type']==='phone_number'){
+          newDatum[count] = line['properties'][datum]['phone_number']
+        } else if (line['properties'][datum]['type']==='created_time'){
+          newDatum[count] = line['properties'][datum]['created_time']
+        }
+        else {
+          console.log('unknown type of notion data' + line['properties'][datum]);
+        }
+        count++;
+      })
+      rows.push(newDatum)
+    })
+
+    return {
+      "fields": notionFields,
+      "rows": rows
+    };
+
+  }
 
 
 
@@ -116,10 +124,7 @@ module.exports.toGeoJson = function(rawData) {
   });
    */
 
-  return {
-    "fields": notionFields,
-    "rows": rows
-  };
+
 }
 
 module.exports.notionRequest = function (id_notion_table) {
@@ -133,11 +138,13 @@ module.exports.notionRequest = function (id_notion_table) {
         'Authorization': 'Bearer ' + process.env.NOTION_API_KEY
       }
     }, function (error, response, body) {
-      const rawDataFromNotion = JSON.parse(body).results
-      if (rawDataFromNotion !== null){
-        resolve(rawDataFromNotion)
-      } else {
-        reject("error from notion request")
+      if(body) {
+        const rawDataFromNotion = JSON.parse(body).results
+        if (rawDataFromNotion !== null){
+          resolve(rawDataFromNotion)
+        } else {
+          reject("error from notion request")
+        }
       }
     });
   })
