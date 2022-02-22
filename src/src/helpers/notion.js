@@ -34,8 +34,10 @@ module.exports.toGeoJson = function(rawData) {
       let newDatum = {}
       let count = 0
       Object.keys(rawData[0].properties).forEach((datum) => {
+        // ******* GET LAT AND LONG *********
         if (line['properties'][datum]['type']==='number'){ // Latitude and longitude (mostly)
           newDatum[count] = line['properties'][datum]['number']
+          // ******* GET TITLE *********
         } else if (line['properties'][datum]['type']==='title'){
           newDatum[count] = line['properties'][datum]['title'][0]['plain_text']
         } else if (line['properties'][datum]['type']==='select'){
@@ -44,6 +46,7 @@ module.exports.toGeoJson = function(rawData) {
             value = line['properties'][datum]['select']['name']
           }
           newDatum[count] = value
+          // ******* GET MULTISELECT *********
         } else if (line['properties'][datum]['type']==='multi_select'){
           let multi_select = []
           line['properties'][datum]['multi_select'].forEach((item) => {
@@ -52,6 +55,7 @@ module.exports.toGeoJson = function(rawData) {
           /* Comment one of the two below */
           newDatum[count] = multi_select // If we want all the items in an array.
           //newDatum[count] = multi_select[0] // If we only want the first item.
+          // ******* GET URL *********
         } else if (line['properties'][datum]['type']==='url'){
           newDatum[count] = line['properties'][datum]['url']
         } else if (line['properties'][datum]['type']==='rich_text'){
@@ -71,7 +75,11 @@ module.exports.toGeoJson = function(rawData) {
           newDatum[count] = line['properties'][datum]['created_time']
         }
         else {
+          newDatum[count] = ""
           console.log('unknown type of notion data' + line['properties'][datum]);
+        }
+        if(!newDatum[count]) {
+          newDatum[count] = ""
         }
         count++;
       })
