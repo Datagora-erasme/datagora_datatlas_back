@@ -21,6 +21,8 @@ app.use(upload.array());
 app.use(express.static('public'));
 
 const DataNotion = require('./src/helpers/notion')
+const DataWordpress = require('./src/helpers/wordpress')
+
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
@@ -96,6 +98,18 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
 
   }
 });
+
+app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
+  if (req.params.dataType === 'wordpress') {
+    res.send("HOHO")
+    /*DataWordpress.wordpressRequest(req.params.dataWanted).then(function (response) {
+      res.send(DataWordpress.toGeoJson(response))
+    })*/
+  
+    
+  }
+});
+
 
 
 
