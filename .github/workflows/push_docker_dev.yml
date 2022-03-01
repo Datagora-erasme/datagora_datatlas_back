@@ -1,4 +1,4 @@
-name: build-publish-master-container
+name: dev-docker-build
 
 on:
   workflow_dispatch:
