@@ -16,5 +16,5 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: erasme/datatlas-back-dev
+          repository: erasme/datatlas-back-dev-${GITHUB_SHA::6}
           tags: latest
