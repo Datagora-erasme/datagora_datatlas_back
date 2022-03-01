@@ -1,16 +1,12 @@
 name: build-publish-master-container
 
 on:
-  push:
-    branches:
-      - 'dev'
+  workflow_dispatch:
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
-      - name: Get github tags for docker
-        run : echo ::set-output name=commit_hash::${GITHUB_SHA::8}
       - name: Check out the repo
         uses: actions/checkout@v2
       - name: Push to Docker Hub
