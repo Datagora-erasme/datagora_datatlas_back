@@ -1,6 +1,9 @@
 name: dev-docker-build
 
 on:
+  push:
+      branches:
+        - 'main'
   workflow_dispatch:
 jobs:
   push_to_registry:
