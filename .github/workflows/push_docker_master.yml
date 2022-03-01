@@ -1,4 +1,4 @@
-name: build-publish-master-container
+name: master-docker-build
 
 on:
   push:
