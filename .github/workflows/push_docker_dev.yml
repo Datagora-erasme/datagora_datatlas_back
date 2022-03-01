@@ -9,6 +9,8 @@ jobs:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
+      - name: Get github tags for docker
+        run : echo ::set-output name=commit_hash::${GITHUB_SHA::8}
       - name: Check out the repo
         uses: actions/checkout@v2
       - name: Push to Docker Hub
@@ -17,4 +19,4 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: erasme/datatlas-back-dev
-          tags: ${{GITHUB_SHA::6}}
+          tags: ${{ github.sha }}
