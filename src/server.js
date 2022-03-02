@@ -5,12 +5,13 @@
 /*
     Imports
  */
+const multer  = require('multer')
 const express = require('express') // Webserver
 let cors = require('cors')
+const upload = multer({ dest: 'uploads/' }).single('image')
+
 let app = express()
 app.use(cors())
-let multer = require('multer');
-let upload = multer();
 
 require('dotenv').config();
 
@@ -32,7 +33,7 @@ const has = Object.prototype.hasOwnProperty;
 GET   /api/test/          -> request to check connection                                          -> send back « test »                     DONE
 GET   /api/conf/:confWanted/ -> request for a conf data.                                                                                          DONE
 POST  /api/conf/:confWanted/ -> request for storing a conf data.                                                                                  DONE
-
+POST  /api/upload/            -> request to store a file              -> NOT WORKING
 
     /api/conf/retrieve/ -> request for default configuration                                    -> send back the recorded Kepler configuration
     /api/conf/store/    -> request for storing a new default configuration (new_configuration)  -> send back the two recorded Kepler configuration
@@ -80,29 +81,18 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
     DataNotion.notionRequest(req.params.dataWanted).then(function (response) {
       res.send(DataNotion.toGeoJson(response))
     })
-    /*
-    if(req.params.dataWanted ==='notion_tiga'){
-      DataNotion.notionRequest('68a69714137041deb0112e541a9d12b3').then(function (response) {
-        res.send(DataNotion.TIGAtoGEOjson(response))
-      })
-    } else if(req.params.dataWanted ==='notion_mediation'){
-      DataNotion.notionRequest('8dc9e3a344f54e4db756917acf047af3').then(function (response) {
-        res.send(DataNotion.mediationtoGEOjson(response))
-      })
-    } else {
-      res.send("unknown notion route")
-    }*/
-
-
   }
 });
 
+app.post('/api/upload', upload.single('image'), function (req, res, next) {
+  // req.file is the `avatar` file
+  // req.body will hold the text fields, if there were any
 
+  // DOES NOT WORK ! req.file is ALWAYS undefined whatever i do.
+  console.log(req.file)
+  console.log(req.body)
 
-
-
-
-
+})
 
 
 
