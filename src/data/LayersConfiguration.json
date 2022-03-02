@@ -1,45 +1,45 @@
 {
-  "siteTitle": "Instance Name",
-  "mapboxToken": "mapboxToken",
+  "siteTitle": "DatAtlas-Industries",
+  "mapboxToken": "pk.eyJ1IjoieXNpb3VkYSIsImEiOiJja3JnZ2k1cDg1cTMxMnJueGV6cDU4c25iIn0.td9NqwcqkUW1VeRIPB2oTA",
   "defaultMapLocation": {
       "latitude": 0,
       "longitude": 0,
       "zoom": 10
   },
-  "defaultMapBoxStyleUrl": "mapbox://styles/yourmapboxstyle",
+  "defaultMapBoxStyleUrl": "mapbox://styles/mapbox/light-v10",
   "modules": {
       "exportDataBtn": true
   },
   "theme": {
       "filterSidePanel": {
           "buttonColorRange": [
-              "#dc7e6d",
-              "#69b59d",
-              "#c3c356"
+              "#3d8490",
+              "#27536f",
+              "#df7160"
           ]
       }
   },
   "bottomRightButtons": [
       {
-          "text": "hey im a button",
-          "url": "url"
+          "text": "+ Ajouter un lieu",
+          "url": "https://form.typeform.com/to/V1f3GNXR"
       },
       {
-          "text": "hey im a button",
-          "url": "url"
+          "text": "+ Ajouter un évenement",
+          "url": "https://form.typeform.com/to/vTRYrYpv?typeform-source=tank-tiga.webflow.io"
       }
   ],
   "layers": [
       {
-          "name": "tiga",
+          "name": "Structure Médiation",
           "type": "notion",
-          "url": "notionUrl",
-          "id": 0
+          "url": "https://dev-back-datatlas.datagora.erasme.org/api/data/notion/notion_tiga",
+          "id": 2
       },
       {
-          "name": "GeoJson Data api",
-          "type": "geojson",
-          "url": "url",
+          "name": "Evenements",
+          "type": "notion",
+          "url": "https://dev-back-datatlas.datagora.erasme.org/api/data/notion/notion_mediation/",
           "id": 1
       }
   ]

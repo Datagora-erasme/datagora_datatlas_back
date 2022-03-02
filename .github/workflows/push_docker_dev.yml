@@ -1,4 +1,4 @@
-name: build-publish-master-container
+name: dev-docker-build
 
 on:
   push:
@@ -17,4 +17,4 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: erasme/datatlas-back-dev
-          tags: latest
+          tags: dev-latest,${{ github.sha }}
