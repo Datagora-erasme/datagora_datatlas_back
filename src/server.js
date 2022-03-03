@@ -18,7 +18,7 @@ require('dotenv').config();
 
 const KeplerConfiguration = require('./KeplerConfiguration')
 const DataSources = require('./DataSources')
-app.use(upload.array());
+//app.use(upload.array());
 app.use(express.static('public'));
 
 const DataNotion = require('./src/helpers/notion')
@@ -98,7 +98,7 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
 });
 
 
-app.post('/api/upload', upload.single('image'), function (req, res, next) {
+/*app.post('/api/upload', upload.single('image'), function (req, res, next) {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
 
@@ -106,26 +106,7 @@ app.post('/api/upload', upload.single('image'), function (req, res, next) {
   console.log(req.file)
   console.log(req.body)
 
-})
-
-
-
-
-
-
-
-
-
-
-// Temporary route for Camille's usage.
-app.get('/api/data/camille/', function (req, res, next) {
-  /*
-    This route is used as an example. It has to read a notion page (in our case tiga) and prepare it including multi-selects
-   */
-  DataNotion.notionRequest('68a69714137041deb0112e541a9d12b3').then(function (response) {
-    res.send(DataNotion.TIGAtoGEOjsonMS(response))
-    })
-});
+})*/
 
 
 app.listen(process.env.DATATLAS_BACK_END_PORT);
