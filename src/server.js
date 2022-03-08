@@ -81,7 +81,7 @@ app.post('/api/conf/:confWanted/', (req, res, next) => {
 app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
   if (req.params.dataType === 'notion') {
     DataNotion.notionRequest(req.params.dataWanted).then(function (response) {
-      res.send(DataNotion.toGeoJson(response))
+      res.send(DataNotion.toGeoJson(response, req.query))
     })
   }
 });

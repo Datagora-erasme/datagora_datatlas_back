@@ -9,7 +9,7 @@ const request = require('request')
  * @param rawData The data from the notion table.
  * @returns {{fields: *[], rows: *[]}}
  */
-module.exports.toGeoJson = function(rawData) {
+module.exports.toGeoJson = function (rawData, queryParameters) {
   let notionFields = []
   let rows = []
 
@@ -33,6 +33,8 @@ module.exports.toGeoJson = function(rawData) {
     rawData.forEach((line) => {
       let newDatum = {}
       let count = 0
+      let isExcluded = false // We might need to exclude some iterations (ex : past events in some cases)
+
       Object.keys(rawData[0].properties).forEach((datum) => {
         // ******* GET LAT AND LONG *********
         if (line['properties'][datum]['type']==='number'){ // Latitude and longitude (mostly)
@@ -73,6 +75,16 @@ module.exports.toGeoJson = function(rawData) {
           newDatum[count] = line['properties'][datum]['phone_number']
         } else if (line['properties'][datum]['type']==='created_time'){
           newDatum[count] = line['properties'][datum]['created_time']
+        } else if (line['properties'][datum]['type']==='date'){
+          newDatum[count] = Date.parse(line['properties'][datum]['date']['start'])
+          // We need to check if past items are said to be ignored (using the parameter ?pastevent=false in the url)
+          if(
+            datum==='Date-fin' &&
+            queryParameters['pastevent']==='false' &&
+            Date.parse(line['properties'][datum]['date']['start']) < Date.now()
+          ) {
+            isExcluded = true
+          }
         }
         else {
           newDatum[count] = ""
@@ -83,56 +95,16 @@ module.exports.toGeoJson = function(rawData) {
         }
         count++;
       })
-      rows.push(newDatum)
+      if (!isExcluded){
+        rows.push(newDatum)
+      }
     })
 
     return {
       "fields": notionFields,
       "rows": rows
     };
-
   }
-
-
-
-
-
-  /*
-  rawData.forEach((datum) => {
-    // We only keep rows which « statut » field is equal to « Validé »
-    if(datum.properties['statut']["select"]!=null && datum.properties['statut']["select"]["name"]==='Validé'){
-      const newDatum = {
-        "0":datum.properties["date-ajout"]["created_time"],
-        "1":datum.properties['saisie interne ou externe ?']["select"]==null ? '' : datum.properties['saisie interne ou externe ?']["select"]["name"],
-        "2":datum.properties['statut']["select"]==null ? '' : datum.properties['statut']["select"]["name"],
-        "3":datum.properties['nom-structure']["title"][0]==null ? '' : datum.properties['nom-structure']["title"][0]["text"]["content"],
-        "4":datum.properties['description']["rich_text"][0]==null ? '' : datum.properties['description']["rich_text"][0]["text"]["content"],
-        "5":datum.properties["site-web"]["url"],
-        "6":datum.properties['adresse']["rich_text"][0]==null ? '' : datum.properties['adresse']["rich_text"][0]["plain_text"],
-        "7":datum.properties["email-structure"]["email"],
-        "8":datum.properties["telephone-structure"]["phone_number"],
-        "9":datum.properties["reseau-social_principal"]==null ? '' : datum.properties["reseau-social_principal"]["url"],
-        "10":datum.properties['type-structure']["select"]==null ? '' : datum.properties['type-structure']["select"]["name"],
-        "11":datum.properties['activites']["multi_select"][0]["name"]==null ? '' : datum.properties['activites']["multi_select"][0]["name"], // We only take the first occurency for now.,
-        "12":datum.properties['expertise']["multi_select"][0]===undefined ? '' : datum.properties['expertise']["multi_select"][0]["name"], // We only take the first occurency for now.,
-        "13":datum.properties['public-cible']["multi_select"][0]===undefined ? '' : datum.properties['public-cible']["multi_select"][0]["name"], // We only take the first occurency for now.,
-        "14":datum.properties['echelle-territoriale']["multi_select"][0]===undefined ? '' : datum.properties['echelle-territoriale']["multi_select"][0]["name"], // We only take the first occurency for now.,
-        "15":"",
-        //"15":datum.properties['image du lieu']["files"][0]==null ? '' : datum.properties['image du lieu']["files"][0]["file"]["url"],
-        "16":datum.properties["contributeur-membre-structure ?"]["select"],
-        "17":datum.properties["nom-contributeur"]["rich_text"],
-        "18":datum.properties["email-contributeur"]["email"],
-        "20":datum.properties["latitude"]["number"],
-        "21":datum.properties["longitude"]["number"],
-        "22":datum.properties['icon']["rich_text"][0]==null ? '' : datum.properties['icon']["rich_text"][0]["plain_text"],
-      }
-      rows.push(newDatum)
-      //console.log(datum.properties['expertise']["multi_select"][0])
-    }
-  });
-   */
-
-
 }
 
 module.exports.notionRequest = function (id_notion_table) {
