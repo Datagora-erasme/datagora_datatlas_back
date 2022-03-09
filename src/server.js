@@ -83,17 +83,12 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
     DataNotion.notionRequest(req.params.dataWanted).then(function (response) {
       res.send(DataNotion.toGeoJson(response, req.query))
     })
-  }
-});
-
-app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
-  if (req.params.dataType === 'wordpress') {
-    res.send("HOHO")
-    /*DataWordpress.wordpressRequest(req.params.dataWanted).then(function (response) {
+  } else if (req.params.dataType === 'wordpress') {
+    DataWordpress.wordpressRequest(req.params.dataWanted).then(function (response) {
       res.send(DataWordpress.toGeoJson(response))
-    })*/
-  
-    
+    })
+
+
   }
 });
 

@@ -107,6 +107,11 @@ module.exports.toGeoJson = function (rawData, queryParameters) {
   }
 }
 
+/**
+ * Requests a notion page (its id is in the parameter) and returns a raw json result.
+ * @param id_notion_table
+ * @returns {Promise<unknown>}
+ */
 module.exports.notionRequest = function (id_notion_table) {
   return new Promise(function (resolve, reject) {
     request({
@@ -134,7 +139,7 @@ module.exports.notionRequest = function (id_notion_table) {
 
 
 /*                                          METHODS                                                                   */
-
+// todo P-A : delete this method ?
 const convertJsonArrayToSimpleStringArray = (data) => {
   const arrayMS = [];
   for(const item of data) {
