@@ -56,10 +56,3 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
     })
   }
 });
-
-
-
-
-
-
-

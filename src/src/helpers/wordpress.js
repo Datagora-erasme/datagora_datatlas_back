@@ -29,6 +29,12 @@ module.exports.toGeoJson = function(rawData) {
       "type": "real"
     }
     wordpressFields.push(newFieldLon)
+    const newFieldIcon = {
+      "name": "icon",
+      "format": "",
+      "type": "string"
+    }
+    wordpressFields.push(newFieldIcon)
 
     // Other proper columns
     Object.keys(rawData[0]).forEach((datum) => {
@@ -43,15 +49,11 @@ module.exports.toGeoJson = function(rawData) {
     // ROWS
     Object.keys(rawData).forEach((datum) => {
       let newDatum = {}
-      // js is a bi
       newDatum[0] = Math.random() * (45.9 - 45.5) + 45.5
-      rows.push(newDatum)
       newDatum[1] = Math.random() * (4.95 - 4.75) + 4.7
-      rows.push(newDatum)
-      let count = 2
-      console.log('-------------------------------------nouvel item------------------------------------')
+      newDatum[2] = 'location-dot'
+      let count = 3
       Object.keys(rawData[datum]).forEach((column) => {
-        console.log(column)
         newDatum[count]='toto'
         count++
       })
