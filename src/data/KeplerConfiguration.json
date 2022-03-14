@@ -5,9 +5,9 @@
       "filters": [
         {
           "dataId": [
-            "mediation"
+            "Evenements"
           ],
-          "id": "e6cdj8pth",
+          "id": "6ux5bx5do",
           "name": [
             "publics"
           ],
@@ -21,9 +21,9 @@
         },
         {
           "dataId": [
-            "mediation"
+            "Evenements"
           ],
-          "id": "0kxerkeub",
+          "id": "0hew1rl3b",
           "name": [
             "type_event"
           ],
@@ -37,9 +37,9 @@
         },
         {
           "dataId": [
-            "tiga"
+            "Structure Médiation"
           ],
-          "id": "g61q5ddmr",
+          "id": "8r35jf5zt",
           "name": [
             "public-cible"
           ],
@@ -53,9 +53,9 @@
         },
         {
           "dataId": [
-            "tiga"
+            "Structure Médiation"
           ],
-          "id": "q6vot2hh4",
+          "id": "2j8awpeui",
           "name": [
             "type_structure"
           ],
@@ -69,9 +69,9 @@
         },
         {
           "dataId": [
-            "tiga"
+            "Structure Médiation"
           ],
-          "id": "hv8sn1pgfo",
+          "id": "xyg3l376r",
           "name": [
             "activites"
           ],
@@ -85,9 +85,9 @@
         },
         {
           "dataId": [
-            "tiga"
+            "Structure Médiation"
           ],
-          "id": "f41lbkzfi",
+          "id": "5sqog6m4",
           "name": [
             "expertise"
           ],
@@ -102,15 +102,159 @@
       ],
       "layers": [
         {
-          "id": "rfr0bn",
+          "id": "8hey5i9",
+          "type": "icon",
+          "config": {
+            "dataId": "Structure Médiation",
+            "label": "Structures Médiation",
+            "color": [
+              16,
+              59,
+              73
+            ],
+            "highlightColor": [
+              252,
+              242,
+              26,
+              255
+            ],
+            "columns": {
+              "lat": "latitude",
+              "lng": "longitude",
+              "icon": "icon",
+              "altitude": null
+            },
+            "isVisible": true,
+            "visConfig": {
+              "radius": 58.4,
+              "fixedRadius": false,
+              "opacity": 0.8,
+              "colorRange": {
+                "name": "Global Warming",
+                "type": "sequential",
+                "category": "Uber",
+                "colors": [
+                  "#5A1846",
+                  "#900C3F",
+                  "#C70039",
+                  "#E3611C",
+                  "#F1920E",
+                  "#FFC300"
+                ]
+              },
+              "radiusRange": [
+                0,
+                50
+              ]
+            },
+            "hidden": false,
+            "textLabel": [
+              {
+                "field": null,
+                "color": [
+                  255,
+                  255,
+                  255
+                ],
+                "size": 18,
+                "offset": [
+                  0,
+                  0
+                ],
+                "anchor": "start",
+                "alignment": "center"
+              }
+            ]
+          },
+          "visualChannels": {
+            "colorField": null,
+            "colorScale": "quantile",
+            "sizeField": null,
+            "sizeScale": "linear"
+          }
+        },
+        {
+          "id": "k5t7poc",
+          "type": "icon",
+          "config": {
+            "dataId": "Evenements",
+            "label": "événements",
+            "color": [
+              11,
+              95,
+              101
+            ],
+            "highlightColor": [
+              252,
+              242,
+              26,
+              255
+            ],
+            "columns": {
+              "lat": "latitude",
+              "lng": "longitude",
+              "icon": "icon",
+              "altitude": null
+            },
+            "isVisible": true,
+            "visConfig": {
+              "radius": 39.6,
+              "fixedRadius": false,
+              "opacity": 0.8,
+              "colorRange": {
+                "name": "Global Warming",
+                "type": "sequential",
+                "category": "Uber",
+                "colors": [
+                  "#5A1846",
+                  "#900C3F",
+                  "#C70039",
+                  "#E3611C",
+                  "#F1920E",
+                  "#FFC300"
+                ]
+              },
+              "radiusRange": [
+                0,
+                50
+              ]
+            },
+            "hidden": false,
+            "textLabel": [
+              {
+                "field": null,
+                "color": [
+                  255,
+                  255,
+                  255
+                ],
+                "size": 18,
+                "offset": [
+                  0,
+                  0
+                ],
+                "anchor": "start",
+                "alignment": "center"
+              }
+            ]
+          },
+          "visualChannels": {
+            "colorField": null,
+            "colorScale": "quantile",
+            "sizeField": null,
+            "sizeScale": "linear"
+          }
+        },
+        {
+          "id": "t2qy77q",
           "type": "geojson",
           "config": {
-            "dataId": "Agences Pôle Emploi de la Métropole de Lyon",
-            "label": "Agences Pôle Emploi de la Métropole de Lyon",
+            "dataId": "Agences Pôle Emploi",
+            "label": "Agences Pôle Emploi",
             "color": [
-              248,
-              149,
-              112
+              18,
+              147,
+              154
             ],
             "highlightColor": [
               252,
@@ -123,7 +267,7 @@
             },
             "isVisible": true,
             "visConfig": {
-              "opacity": 1,
+              "opacity": 0.8,
               "strokeOpacity": 0.8,
               "thickness": 0.5,
               "strokeColor": null,
@@ -153,7 +297,7 @@
                   "#FFC300"
                 ]
               },
-              "radius": 14.9,
+              "radius": 10,
               "sizeRange": [
                 0,
                 10
@@ -204,156 +348,12 @@
             "radiusField": null,
             "radiusScale": "linear"
           }
-        },
-        {
-          "id": "irkiky",
-          "type": "icon",
-          "config": {
-            "dataId": "tiga",
-            "label": "Tiga",
-            "color": [
-              184,
-              196,
-              54
-            ],
-            "highlightColor": [
-              252,
-              242,
-              26,
-              255
-            ],
-            "columns": {
-              "lat": "latitude",
-              "lng": "longitude",
-              "icon": "icon",
-              "altitude": null
-            },
-            "isVisible": true,
-            "visConfig": {
-              "radius": 39,
-              "fixedRadius": false,
-              "opacity": 0.8,
-              "colorRange": {
-                "name": "Global Warming",
-                "type": "sequential",
-                "category": "Uber",
-                "colors": [
-                  "#5A1846",
-                  "#900C3F",
-                  "#C70039",
-                  "#E3611C",
-                  "#F1920E",
-                  "#FFC300"
-                ]
-              },
-              "radiusRange": [
-                0,
-                50
-              ]
-            },
-            "hidden": false,
-            "textLabel": [
-              {
-                "field": null,
-                "color": [
-                  255,
-                  255,
-                  255
-                ],
-                "size": 18,
-                "offset": [
-                  0,
-                  0
-                ],
-                "anchor": "start",
-                "alignment": "center"
-              }
-            ]
-          },
-          "visualChannels": {
-            "colorField": null,
-            "colorScale": "quantile",
-            "sizeField": null,
-            "sizeScale": "linear"
-          }
-        },
-        {
-          "id": "i4hn37a",
-          "type": "icon",
-          "config": {
-            "dataId": "mediation",
-            "label": "Mediation",
-            "color": [
-              98,
-              206,
-              173
-            ],
-            "highlightColor": [
-              252,
-              242,
-              26,
-              255
-            ],
-            "columns": {
-              "lat": "latitude",
-              "lng": "longitude",
-              "icon": "icon",
-              "altitude": null
-            },
-            "isVisible": true,
-            "visConfig": {
-              "radius": 36.4,
-              "fixedRadius": false,
-              "opacity": 0.8,
-              "colorRange": {
-                "name": "Global Warming",
-                "type": "sequential",
-                "category": "Uber",
-                "colors": [
-                  "#5A1846",
-                  "#900C3F",
-                  "#C70039",
-                  "#E3611C",
-                  "#F1920E",
-                  "#FFC300"
-                ]
-              },
-              "radiusRange": [
-                0,
-                50
-              ]
-            },
-            "hidden": false,
-            "textLabel": [
-              {
-                "field": null,
-                "color": [
-                  255,
-                  255,
-                  255
-                ],
-                "size": 18,
-                "offset": [
-                  0,
-                  0
-                ],
-                "anchor": "start",
-                "alignment": "center"
-              }
-            ]
-          },
-          "visualChannels": {
-            "colorField": null,
-            "colorScale": "quantile",
-            "sizeField": null,
-            "sizeScale": "linear"
-          }
         }
       ],
       "interactionConfig": {
         "tooltip": {
           "fieldsToShow": {
-            "Agences Pôle Emploi de la Métropole de Lyon": [
+            "Agences Pôle Emploi": [
               {
                 "name": "nom",
                 "format": null
@@ -371,17 +371,13 @@
                 "format": null
               },
               {
-                "name": "accueil",
+                "name": "openinghours",
                 "format": null
               }
             ],
-            "mediation": [
+            "Evenements": [
               {
-                "name": "date-ajout",
-                "format": null
-              },
-              {
-                "name": "saisie interne ou externe ?",
+                "name": "nom-evenement",
                 "format": null
               },
               {
@@ -389,33 +385,21 @@
                 "format": null
               },
               {
-                "name": "nom-evenement",
-                "format": null
-              },
-              {
                 "name": "description",
                 "format": null
               }
             ],
-            "tiga": [
-              {
-                "name": "image du lieu",
-                "format": null
-              },
+            "Structure Médiation": [
               {
                 "name": "nom-structure",
                 "format": null
               },
               {
+                "name": "statut",
+                "format": null
+              },
+              {
                 "name": "description",
-                "format": null
-              },
-              {
-                "name": "adresse",
-                "format": null
-              },
-              {
-                "name": "site-web",
                 "format": null
               }
             ]
@@ -445,14 +429,14 @@
     "mapState": {
       "bearing": 0,
       "dragRotate": false,
-      "latitude": 45.71273883295955,
-      "longitude": 4.894770611036621,
+      "latitude": 46.25056855,
+      "longitude": 3.2138145,
       "pitch": 0,
-      "zoom": 11.489706424755735,
+      "zoom": 6,
       "isSplit": false
     },
     "mapStyle": {
-      "styleType": "dark",
+      "styleType": "muted",
       "topLayerGroups": {},
       "visibleLayerGroups": {
         "label": true,
@@ -468,7 +452,16 @@
         17.18305478057247,
         31.1442867897876
       ],
-      "mapStyles": {}
+      "mapStyles": {
+        "monochrome": {
+          "accessToken": null,
+          "custom": true,
+          "icon": null,
+          "id": "monochrome",
+          "label": null,
+          "url": null
+        }
+      }
     }
   }
 }
