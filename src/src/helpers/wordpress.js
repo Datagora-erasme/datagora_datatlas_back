@@ -84,13 +84,15 @@ module.exports.toGeoJson = function(rawData) {
           newDatum[3]=rawData[datum][column].place_label
           newDatum[5]=rawData[datum][column].contact
         } else if (column==='content'){
-          newDatum[4]=rawData[datum][column].rendered
+          newDatum[4]=rawData[datum][column].rendered.replace(/(<([^>]+)>)/gi, "")
         } else if (column==='_links'){
-          if (
-            rawData[datum][column].hasOwnProperty('acf:attachment') &&
-            rawData[datum][column]['acf:attachment'][0].hasOwnProperty('href')
-          ) {
-            newDatum[6] = getImageFromWPUrl(rawData[datum][column]['acf:attachment'][0]['href'])
+          newDatum[6] = 'vide'
+          if ( rawData[datum][column].hasOwnProperty('acf:attachment') && rawData[datum][column]['acf:attachment'][0].hasOwnProperty('href') ) {
+            //newDatum[6] = getImageFromWPUrl(rawData[datum][column]['acf:attachment'][0]['href'])
+            getImageFromWPUrl(rawData[datum][column]['acf:attachment'][0]['href']).then((result)=>function (){
+              console.log('titi')
+              newDatum[6] = result
+            })
           }
         }
         else {
@@ -118,6 +120,11 @@ module.exports.toGeoJson = function(rawData) {
   };
 }
 
+/**
+ *
+ * @param wordpressPostUrl
+ * @returns {Promise<unknown>}
+ */
 module.exports.wordpressRequest = function (wordpressPostUrl) {
   return new Promise(function (resolve, reject) {
     request({
@@ -147,14 +154,72 @@ module.exports.wordpressRequest = function (wordpressPostUrl) {
  * @returns {string}
  */
 const getImageFromWPUrl = (WPUrl) => {
-  this.wordpressRequest(WPUrl.replace('https://', '')).then(function (response) {
+  const url = WPUrl.replace('https://', '')
+  return this.wordpressRequest(url).then(function async (WPContentPage) {
     if (
-      Object.prototype.hasOwnProperty.call(response, 'guid') &&
-      Object.prototype.hasOwnProperty.call(response.guid, 'rendered')
-    ){
-      return response.guid.rendered
+      Object.prototype.hasOwnProperty.call(WPContentPage, 'guid') &&
+      Object.prototype.hasOwnProperty.call(WPContentPage.guid, 'rendered')
+    ) {
+      console.log(WPContentPage.guid.rendered)
+      resolve(WPContentPage.guid.rendered)
     } else {
+      console.log('pas d image')
       return ''
     }
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const getImageFromWPUrl__ = async (WPUrl) => {
+  const url = await WPUrl.replace('https://', '')
+  //console.log(url)
+  const WPContentPage = await this.wordpressRequest(url)
+  //console.log(WPContentPage)
+  if (
+    Object.prototype.hasOwnProperty.call(WPContentPage, 'guid') &&
+    Object.prototype.hasOwnProperty.call(WPContentPage.guid, 'rendered')
+  ) {
+    //console.log(WPContentPage.guid.rendered)
+    return WPContentPage.guid.rendered
+  } else {
+    //console.log('pas d image')
+    return ''
+  }
+}
+
+
+
+
+
+
+
+
+
+const getImageFromWPUrl_ = async (WPUrl) => {
+  return await new Promise((resolve, reject) => {
+    this.wordpressRequest(WPUrl.replace('https://', '')).then(function (response) {
+      if (
+        Object.prototype.hasOwnProperty.call(response, 'guid') &&
+        Object.prototype.hasOwnProperty.call(response.guid, 'rendered')
+      ) {
+        //console.log(response.guid.rendered)
+        resolve(response.guid.rendered)
+      } else {
+        resolve('')
+      }
+    })
   })
 }
