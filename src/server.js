@@ -51,9 +51,19 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
       res.send(DataNotion.toGeoJson(response, req.query))
     })
   } else if (req.params.dataType === 'wordpress') {
-    DataWordpress.wordpressRequest(req.params.dataWanted).then(function (response) {
-      res.send(DataWordpress.toGeoJson(response))
-      //res.send('toto')
+    DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
+      return DataWordpress.getAllWPData(rawData)
+    }).then(function (rawData) {
+      res.send(rawData)
     })
+    /*
+    DataWordpress.wordpressRequest(req.params.dataWanted)
+      .then(function (rawData) {
+      return DataWordpress.toGeoJson(rawData)
+    }).then(function (dataProjects) {
+      DataWordpress.insertImageWP(dataProjects).then((taxAmount) => console.log(taxAmount));
+      //return DataWordpress.extractImageUrl(dataProjects)
+      //res.send('titi')
+    })*/
   }
 });

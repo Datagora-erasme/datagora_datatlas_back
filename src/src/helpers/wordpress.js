@@ -4,6 +4,7 @@
 
 const request = require('request')
 const { wordpressRequest } = require('./wordpress')
+const { toGeoJson } = require('./notion')
 
 /**
  * Sort data from a wordpress table into a coherent GEOjson format.
@@ -88,18 +89,10 @@ module.exports.toGeoJson = function (rawData) {
           newDatum[4] = rawData[datum][column].rendered.replace(/(<([^>]+)>)/gi, "")
         } else if (column === '_links') {
           if (rawData[datum][column].hasOwnProperty('acf:attachment') && rawData[datum][column]['acf:attachment'][0].hasOwnProperty('href')) {
-            //console.log(getImageFromWPUrl(rawData[datum][column]['acf:attachment'][0]['href']))
-            //newDatum[6] = getImageFromWPUrl(rawData[datum][column]['acf:attachment'][0]['href'])
-            //newDatum[6] = await test(rawData[datum][column]['acf:attachment'][0]['href'])
-            newDatum[6] = 'todo'
-            /*
-            getImageFromWPUrl(rawData[datum][column]['acf:attachment'][0]['href']).then((result)=>function (){
-              console.log('titi')
-              newDatum[6] = result
-            })
-            */
+            newDatum[6] = rawData[datum][column]['acf:attachment'][0]['href']
+          } else {
+            newDatum[6]='';
           }
-
         } else {
           newDatum[count] = rawData[datum][column]
         }
@@ -130,9 +123,6 @@ module.exports.toGeoJson = function (rawData) {
  * @param wordpressPostUrl
  * @returns {Promise<unknown>}
  */
-/*
-solutions pourries à explorer : faire sortir l'extraction de l'image ailleurs (une deuxième boucle)
- */
 module.exports.wordpressRequest = function (wordpressPostUrl) {
   return new Promise(function (resolve, reject) {
     request({
@@ -154,52 +144,120 @@ module.exports.wordpressRequest = function (wordpressPostUrl) {
   })
 }
 
-// METHODS
+module.exports.getAllWPData = function (rawData) {
+  return Promise.resolve(getMostData(rawData).then(function (WPExtractedData) {console.log('---------------'); return getImages(WPExtractedData)}))
+}
 
-/**
- * Explores a WP API url (related to a picture) and tries to extract the picture direct url.
- * @param WPUrl
- * @returns {string}
- */
-const getImageFromWPUrl = async (WPUrl) => {
-  return await new Promise(function (resolve, reject) {
-    request({
-      url: WPUrl,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
+function getMostData (rawData) {
+  let wordpressFields = []
+  let rows = []
+
+  if (rawData) {
+    // TODO ! REWRITE THIS ENTIRE METHOD. Data are poorly recorded (and missing columns) in our current WP table.
+
+    // FIELDS
+    const newFieldLat = {
+      "name": "latitude",
+      "format": "",
+      "type": "real"
+    }
+    wordpressFields.push(newFieldLat)
+    const newFieldLon = {
+      "name": "longitude",
+      "format": "",
+      "type": "real"
+    }
+    wordpressFields.push(newFieldLon)
+    const newFieldIcon = {
+      "name": "icon",
+      "format": "",
+      "type": "string"
+    }
+    wordpressFields.push(newFieldIcon)
+    const newFieldAdr = {
+      "name": "address",
+      "format": "",
+      "type": "string"
+    }
+    wordpressFields.push(newFieldAdr)
+    const newFieldDesc = {
+      "name": "description",
+      "format": "",
+      "type": "string"
+    }
+    wordpressFields.push(newFieldDesc)
+    const newFieldContact = {
+      "name": "contact",
+      "format": "",
+      "type": "string"
+    }
+    wordpressFields.push(newFieldContact)
+    const newFieldImg = {
+      "name": "img",
+      "format": "",
+      "type": "string"
+    }
+    wordpressFields.push(newFieldImg)
+
+    // Other proper columns
+    Object.keys(rawData[0]).forEach((datum) => {
+      const newField = {
+        "name": datum,
+        "format": "",
+        "type": 'string'
       }
-    }, function (error, response, body) {
-      if (body) {
-        const rawDataFromWordpress = JSON.parse(body)
-        if (rawDataFromWordpress !== null) {
-          resolve(rawDataFromWordpress)
+      wordpressFields.push(newField)
+    })
+
+    // ROWS
+    for (const datum of Object.keys(rawData)) {
+      let newDatum = {}
+      newDatum[0] = Math.random() * (45.9 - 45.5) + 45.5
+      newDatum[1] = Math.random() * (4.95 - 4.75) + 4.7
+      newDatum[2] = 'location-dot'
+      let count = 7
+      for (const column of Object.keys(rawData[datum])) {
+        if (column === 'title') {
+          newDatum[count] = rawData[datum][column].rendered
+        } else if (column === 'acf') {
+          newDatum[3] = rawData[datum][column].place_label
+          newDatum[5] = rawData[datum][column].contact
+        } else if (column === 'content') {
+          newDatum[4] = rawData[datum][column].rendered.replace(/(<([^>]+)>)/gi, "")
+        } else if (column === '_links') {
+          if (rawData[datum][column].hasOwnProperty('acf:attachment') && rawData[datum][column]['acf:attachment'][0].hasOwnProperty('href')) {
+            newDatum[6] = rawData[datum][column]['acf:attachment'][0]['href']
+          } else {
+            newDatum[6]='';
+          }
         } else {
-          reject("error from wordpress request")
+          newDatum[count] = rawData[datum][column]
         }
+        /*
+          WE WANT :
+         Filtre etat / type_de_projet = Dans ma rue / Dans mon truc -
+          image => placeholder 1
+          mots clefs :
+          photos secondaire (bonus)
+
+         */
+        //console.log(column)
+
+        count++
       }
-    });
-  })
-}
+      rows.push(newDatum)
+    }
 
-async function test(WPUrl) {
-  try {
-    const url = await WPUrl.replace('https://', '')
-    const WPContentPage = await this.wordpressRequest(url)
-    const desiredContent = await extractImageURL(WPContentPage)
-    console.log(desiredContent)
-/*
-    const reposResponse = await fetch(`${url}/${userName}/repos`);
-    const userRepos = await reposResponse.json();
-
-    console.log(userRepos);*/
-  } catch (error) {
-    console.log(error);
+    return Promise.resolve({
+      "fields": wordpressFields,
+      "rows": rows
+    })
   }
 }
 
-function extractImageURL(content){
-  return 'tagada tsoin tsoin'
+function getImages(WPData){
+  console.log(WPData)
+  return Promise.resolve(WPData)
 }
 
 
@@ -208,46 +266,21 @@ function extractImageURL(content){
 
 
 
-
-
-
-const getImageFromWPUrl__ = async (WPUrl) => {
-  const url = await WPUrl.replace('https://', '')
-  //console.log(url)
-  const WPContentPage = await this.wordpressRequest(url)
-  //console.log(WPContentPage)
-  if (
-    Object.prototype.hasOwnProperty.call(WPContentPage, 'guid') &&
-    Object.prototype.hasOwnProperty.call(WPContentPage.guid, 'rendered')
-  ) {
-    //console.log(WPContentPage.guid.rendered)
-    return WPContentPage.guid.rendered
-  } else {
-    //console.log('pas d image')
-    return ''
-  }
-}
-
-
-
-
-
-
-
-
-
-const getImageFromWPUrl_ = async (WPUrl) => {
-  return await new Promise((resolve, reject) => {
-    this.wordpressRequest(WPUrl.replace('https://', '')).then(function (response) {
+module.exports.extractImageUrl = function (WPExtractedData) {
+  const properData = WPExtractedData.rows.forEach(element => {
+    console.log('itération de la fonction')
+    this.wordpressRequest(element[6].replace('https://', '')).then(function (WPPageContent) {
       if (
-        Object.prototype.hasOwnProperty.call(response, 'guid') &&
-        Object.prototype.hasOwnProperty.call(response.guid, 'rendered')
+        Object.prototype.hasOwnProperty.call(WPPageContent, 'guid') &&
+        Object.prototype.hasOwnProperty.call(WPPageContent.guid, 'rendered')
       ) {
-        //console.log(response.guid.rendered)
-        resolve(response.guid.rendered)
+        return element[6] = WPPageContent.guid.rendered
       } else {
-        resolve('')
+        return element[6] = '';
       }
     })
+    return WPExtractedData
   })
+  console.log(properData)
+  return 'toto'
 }
