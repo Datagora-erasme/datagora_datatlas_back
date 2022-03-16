@@ -1,5 +1,6 @@
 // IMPORTS
 const express = require('express');
+const cors = require('cors')
 const formidableMiddleware = require('express-formidable');
 require('dotenv').config();
 const KeplerConfiguration = require('./KeplerConfiguration')
@@ -11,6 +12,7 @@ const app = express();
 app.listen(process.env.DATATLAS_BACK_END_PORT);
 console.log("Listening on this port :", process.env.DATATLAS_BACK_END_PORT)
 app.use(formidableMiddleware());
+app.use(cors())
 
 // INTERNAL TOOLS
 const has = Object.prototype.hasOwnProperty;
