@@ -3,13 +3,14 @@
  */
 
 const request = require('request')
+const { wordpressRequest } = require('./wordpress')
 
 /**
  * Sort data from a wordpress table into a coherent GEOjson format.
  * @param rawData The data from the notion table.
  * @returns {{fields: *[], rows: *[]}}
  */
-module.exports.toGeoJson = function(rawData) {
+module.exports.toGeoJson = function (rawData) {
   let wordpressFields = []
   let rows = []
 
@@ -71,32 +72,36 @@ module.exports.toGeoJson = function(rawData) {
     })
 
     // ROWS
-    Object.keys(rawData).forEach((datum) => {
+    for (const datum of Object.keys(rawData)) {
       let newDatum = {}
       newDatum[0] = Math.random() * (45.9 - 45.5) + 45.5
       newDatum[1] = Math.random() * (4.95 - 4.75) + 4.7
       newDatum[2] = 'location-dot'
       let count = 7
-      Object.keys(rawData[datum]).forEach((column) => {
-        if (column==='title'){
-          newDatum[count]=rawData[datum][column].rendered
-        } else if (column==='acf'){
-          newDatum[3]=rawData[datum][column].place_label
-          newDatum[5]=rawData[datum][column].contact
-        } else if (column==='content'){
-          newDatum[4]=rawData[datum][column].rendered.replace(/(<([^>]+)>)/gi, "")
-        } else if (column==='_links'){
-          newDatum[6] = 'vide'
-          if ( rawData[datum][column].hasOwnProperty('acf:attachment') && rawData[datum][column]['acf:attachment'][0].hasOwnProperty('href') ) {
+      for (const column of Object.keys(rawData[datum])) {
+        if (column === 'title') {
+          newDatum[count] = rawData[datum][column].rendered
+        } else if (column === 'acf') {
+          newDatum[3] = rawData[datum][column].place_label
+          newDatum[5] = rawData[datum][column].contact
+        } else if (column === 'content') {
+          newDatum[4] = rawData[datum][column].rendered.replace(/(<([^>]+)>)/gi, "")
+        } else if (column === '_links') {
+          if (rawData[datum][column].hasOwnProperty('acf:attachment') && rawData[datum][column]['acf:attachment'][0].hasOwnProperty('href')) {
+            //console.log(getImageFromWPUrl(rawData[datum][column]['acf:attachment'][0]['href']))
             //newDatum[6] = getImageFromWPUrl(rawData[datum][column]['acf:attachment'][0]['href'])
+            //newDatum[6] = await test(rawData[datum][column]['acf:attachment'][0]['href'])
+            newDatum[6] = 'todo'
+            /*
             getImageFromWPUrl(rawData[datum][column]['acf:attachment'][0]['href']).then((result)=>function (){
               console.log('titi')
               newDatum[6] = result
             })
+            */
           }
-        }
-        else {
-          newDatum[count]=rawData[datum][column]
+
+        } else {
+          newDatum[count] = rawData[datum][column]
         }
         /*
           WE WANT :
@@ -109,9 +114,9 @@ module.exports.toGeoJson = function(rawData) {
         //console.log(column)
 
         count++
-      })
+      }
       rows.push(newDatum)
-    })
+    }
   }
 
   return {
@@ -124,6 +129,9 @@ module.exports.toGeoJson = function(rawData) {
  *
  * @param wordpressPostUrl
  * @returns {Promise<unknown>}
+ */
+/*
+solutions pourries à explorer : faire sortir l'extraction de l'image ailleurs (une deuxième boucle)
  */
 module.exports.wordpressRequest = function (wordpressPostUrl) {
   return new Promise(function (resolve, reject) {
@@ -153,26 +161,46 @@ module.exports.wordpressRequest = function (wordpressPostUrl) {
  * @param WPUrl
  * @returns {string}
  */
-const getImageFromWPUrl = (WPUrl) => {
-  const url = WPUrl.replace('https://', '')
-  return this.wordpressRequest(url).then(function async (WPContentPage) {
-    if (
-      Object.prototype.hasOwnProperty.call(WPContentPage, 'guid') &&
-      Object.prototype.hasOwnProperty.call(WPContentPage.guid, 'rendered')
-    ) {
-      console.log(WPContentPage.guid.rendered)
-      resolve(WPContentPage.guid.rendered)
-    } else {
-      console.log('pas d image')
-      return ''
-    }
+const getImageFromWPUrl = async (WPUrl) => {
+  return await new Promise(function (resolve, reject) {
+    request({
+      url: WPUrl,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }, function (error, response, body) {
+      if (body) {
+        const rawDataFromWordpress = JSON.parse(body)
+        if (rawDataFromWordpress !== null) {
+          resolve(rawDataFromWordpress)
+        } else {
+          reject("error from wordpress request")
+        }
+      }
+    });
   })
 }
 
+async function test(WPUrl) {
+  try {
+    const url = await WPUrl.replace('https://', '')
+    const WPContentPage = await this.wordpressRequest(url)
+    const desiredContent = await extractImageURL(WPContentPage)
+    console.log(desiredContent)
+/*
+    const reposResponse = await fetch(`${url}/${userName}/repos`);
+    const userRepos = await reposResponse.json();
 
+    console.log(userRepos);*/
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-
-
+function extractImageURL(content){
+  return 'tagada tsoin tsoin'
+}
 
 
 

@@ -53,6 +53,7 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
   } else if (req.params.dataType === 'wordpress') {
     DataWordpress.wordpressRequest(req.params.dataWanted).then(function (response) {
       res.send(DataWordpress.toGeoJson(response))
+      //res.send('toto')
     })
   }
 });
