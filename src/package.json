@@ -19,6 +19,7 @@
   "homepage": "https://github.com/urbanlab/datagora_datatlas_back#readme",
   "dependencies": {
     "@notionhq/client": "^0.3.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-formidable": "^1.2.0",
