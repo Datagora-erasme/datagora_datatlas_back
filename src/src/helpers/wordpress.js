@@ -66,6 +66,12 @@ module.exports.toGeoJson = function (rawData) {
       "type": "string"
     }
     wordpressFields.push(newFieldType)
+    const newFieldStatus = {
+      "name": "status",
+      "format": "",
+      "type": "string"
+    }
+    wordpressFields.push(newFieldStatus)
 
     // Other proper columns
     Object.keys(rawData[0]).forEach((datum) => {
@@ -77,23 +83,32 @@ module.exports.toGeoJson = function (rawData) {
       wordpressFields.push(newField)
     })
 
+    const allMyStatus = {
+      "status2": "J'ai envie de réaliser ce projet",
+      "status3": "J'ai déjà commencé ce projet",
+      "status4": "J'ai terminé ce projet"
+  }
+
+
+
     // ROWS
+    console.log(rawData)
     for (const datum of Object.keys(rawData)) {
       let newDatum = {}
       newDatum[0] = Math.random() * (45.9 - 45.5) + 45.5
       newDatum[1] = Math.random() * (4.95 - 4.75) + 4.7
       newDatum[2] = 'location-dot'
-      let count = 8
+      let count = 9
       for (const column of Object.keys(rawData[datum])) {
         if (column === 'title') {
           newDatum[count] = rawData[datum][column].rendered
         } else if (column === 'acf') {
           newDatum[3] = rawData[datum][column].place_label
           newDatum[5] = rawData[datum][column].contact
+          newDatum[8] = allMyStatus[rawData[datum][column].status]
         } else if (column === 'content') {
           newDatum[4] = rawData[datum][column].rendered.replace(/(<([^>]+)>)/gi, "")
         } else if (column === 'type') {
-          console.log(rawData[datum][column])
           newDatum[7] = rawData[datum][column]
         } else if (column === '_links') {
           if (rawData[datum][column].hasOwnProperty('acf:attachment') && rawData[datum][column]['acf:attachment'][0].hasOwnProperty('href')) {
