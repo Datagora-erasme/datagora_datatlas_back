@@ -54,18 +54,11 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
     })
   } else if (req.params.dataType === 'wordpress') {
     DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
-      return DataWordpress.getAllWPData(rawData)
+      return DataWordpress.toGeoJson(rawData)
+    }).then(function (data) {
+      return DataWordpress.insertWPImages(data)
     }).then(function (rawData) {
       res.send(rawData)
     })
-    /*
-    DataWordpress.wordpressRequest(req.params.dataWanted)
-      .then(function (rawData) {
-      return DataWordpress.toGeoJson(rawData)
-    }).then(function (dataProjects) {
-      DataWordpress.insertImageWP(dataProjects).then((taxAmount) => console.log(taxAmount));
-      //return DataWordpress.extractImageUrl(dataProjects)
-      //res.send('titi')
-    })*/
   }
 });
