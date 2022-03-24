@@ -58,6 +58,7 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
     }).then(function (data) {
       return DataWordpress.insertWPImages(data)
     }).then(function (rawData) {
+      console.log('renvoi des données complètes')
       res.send(rawData)
     })
   }

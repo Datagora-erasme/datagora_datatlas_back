@@ -3,7 +3,7 @@
  */
 
 const request = require('request')
-const { wordpressRequest } = require('./wordpress')
+const { insertWPImages } = require('./wordpress')
 
 /**
  * Sort data from a wordpress table into a coherent GEOjson format.
@@ -89,10 +89,7 @@ module.exports.toGeoJson = function (rawData) {
       "status4": "J'ai terminé ce projet"
   }
 
-
-
     // ROWS
-    console.log(rawData)
     for (const datum of Object.keys(rawData)) {
       let newDatum = {}
       newDatum[0] = Math.random() * (45.9 - 45.5) + 45.5
@@ -134,7 +131,6 @@ module.exports.toGeoJson = function (rawData) {
       rows.push(newDatum)
     }
   }
-
   return {
     "fields": wordpressFields,
     "rows": rows
@@ -171,29 +167,50 @@ module.exports.wordpressRequest = function (wordpressPostUrl) {
 
 /*        ABOUT IMAGES              */
 module.exports.insertWPImages = function (WPData) {
-  const imageRetriever = WPData.rows.forEach(element => {
-    //injectImage(element).then(r => element[6]=r)
-    element[6] = this.extractImageUrl(element[6])
+  return new Promise(function (resolve, reject) {
+    resolve(extractImageUrl(WPData.rows, WPData.fields))
   })
-  return WPData
 }
 
 
 
-module.exports.extractImageUrl = function (urlWP) {
-  let result = ''
-  this.wordpressRequest(urlWP.replace('https://', '')).then(function (WPPageContent) {
-    if (
-      Object.prototype.hasOwnProperty.call(WPPageContent, 'guid') &&
-      Object.prototype.hasOwnProperty.call(WPPageContent.guid, 'rendered')
-    ) {
-      result = WPPageContent.guid.rendered
+function extractImageUrl(rows, fields) {
+  let promises = []
+  for (const rowNumber in rows){
+    promises.push(getImageFromUrl(rows[rowNumber]))
+  }
+  return Promise.all(promises).then((values) => {
+    return {
+      "fields": fields,
+      "rows": values
     }
   })
-  return result
 }
 
-
+function getImageFromUrl(WPitem) {
+  // todo refacto --> this function has a quasi-clone
+  return new Promise(function (resolve, reject) {
+    request({
+      url: WPitem[6],
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }, function (error, response, body) {
+      if(body) {
+        const rawDataFromWordpress = JSON.parse(body)
+        if (rawDataFromWordpress !== null){
+          WPitem[6] = rawDataFromWordpress.guid.rendered
+          //console.log('----------------------')
+          //console.log(WPitem)
+          resolve(WPitem)
+        } else {
+          reject("error from wordpress request")
+        }
+      }
+    });
+  })
+}
 
 
 
@@ -202,7 +219,6 @@ module.exports.extractImageUrl = function (urlWP) {
 /*          ABOUT COORDINATES           */
 module.exports.insertCoord = function (WPData) {
   return new Promise(function (resolve, reject) {
-    //console.log()
     resolve(WPData)
   })
 }
