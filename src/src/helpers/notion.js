@@ -46,6 +46,13 @@ module.exports.toGeoJson = function (rawData, queryParameters) {
           let value = ''
           if (line['properties'][datum]['select']!==null && line['properties'][datum]['select']['name']!==null){
             value = line['properties'][datum]['select']['name']
+            if (datum==='statut' && value!=='Validé'){
+              isExcluded=true
+            }
+          } else if(datum==='statut' ) {
+            if(line['properties'][datum]['select']==null){
+              isExcluded = true
+            }
           }
           newDatum[count] = value
           // ******* GET MULTISELECT *********
