@@ -175,6 +175,7 @@ module.exports.insertWPImages = function (WPData) {
 
 
 function extractImageUrl(rows, fields) {
+  console.log('toto')
   let promises = []
   for (const rowNumber in rows){
     promises.push(getImageFromUrl(rows[rowNumber]))
@@ -189,27 +190,31 @@ function extractImageUrl(rows, fields) {
 
 function getImageFromUrl(WPitem) {
   // todo refacto --> this function has a quasi-clone
-  return new Promise(function (resolve, reject) {
-    request({
-      url: WPitem[6],
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    }, function (error, response, body) {
-      if(body) {
-        const rawDataFromWordpress = JSON.parse(body)
-        if (rawDataFromWordpress !== null){
-          WPitem[6] = rawDataFromWordpress.guid.rendered
-          //console.log('----------------------')
-          //console.log(WPitem)
-          resolve(WPitem)
-        } else {
-          reject("error from wordpress request")
+  if (WPitem[6]===''){ // Pictures are not always present.
+    return WPitem
+  } else {
+    return new Promise(function (resolve, reject) {
+      request({
+        url: WPitem[6],
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
         }
-      }
-    });
-  })
+      }, function (error, response, body) {
+        if(body) {
+          const rawDataFromWordpress = JSON.parse(body)
+          if (rawDataFromWordpress !== null){
+            WPitem[6] = rawDataFromWordpress.guid.rendered
+            console.log('----------------------')
+            console.log(WPitem)
+            resolve(WPitem)
+          } else {
+            reject("error from wordpress request")
+          }
+        }
+      });
+    })
+  }
 }
 
 
