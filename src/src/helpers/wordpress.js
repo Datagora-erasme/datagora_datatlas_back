@@ -11,87 +11,87 @@ const { insertWPImages } = require('./wordpress')
  * @returns {{fields: *[], rows: *[]}}
  */
 module.exports.toGeoJson = function (rawData) {
-  let wordpressFields = []
-  let rows = []
+  const wordpressFields = []
+  const rows = []
 
   if (rawData) {
     // TODO ! REWRITE THIS ENTIRE METHOD. Data are poorly recorded (and missing columns) in our current WP table.
 
     // FIELDS
     const newFieldLat = {
-      "name": "latitude",
-      "format": "",
-      "type": "real"
+      name: 'latitude',
+      format: '',
+      type: 'real'
     }
     wordpressFields.push(newFieldLat)
     const newFieldLon = {
-      "name": "longitude",
-      "format": "",
-      "type": "real"
+      name: 'longitude',
+      format: '',
+      type: 'real'
     }
     wordpressFields.push(newFieldLon)
     const newFieldIcon = {
-      "name": "icon",
-      "format": "",
-      "type": "string"
+      name: 'icon',
+      format: '',
+      type: 'string'
     }
     wordpressFields.push(newFieldIcon)
     const newFieldAdr = {
-      "name": "address",
-      "format": "",
-      "type": "string"
+      name: 'address',
+      format: '',
+      type: 'string'
     }
     wordpressFields.push(newFieldAdr)
     const newFieldDesc = {
-      "name": "description",
-      "format": "",
-      "type": "string"
+      name: 'description',
+      format: '',
+      type: 'string'
     }
     wordpressFields.push(newFieldDesc)
     const newFieldContact = {
-      "name": "contact",
-      "format": "",
-      "type": "string"
+      name: 'contact',
+      format: '',
+      type: 'string'
     }
     wordpressFields.push(newFieldContact)
     const newFieldImg = {
-      "name": "img",
-      "format": "",
-      "type": "string"
+      name: 'img',
+      format: '',
+      type: 'string'
     }
     wordpressFields.push(newFieldImg)
     const newFieldType = {
-      "name": "type",
-      "format": "",
-      "type": "string"
+      name: 'type',
+      format: '',
+      type: 'string'
     }
     wordpressFields.push(newFieldType)
     const newFieldStatus = {
-      "name": "acf_status",
-      "format": "",
-      "type": "string"
+      name: 'acf_status',
+      format: '',
+      type: 'string'
     }
     wordpressFields.push(newFieldStatus)
 
     // Other proper columns
     Object.keys(rawData[0]).forEach((datum) => {
       const newField = {
-        "name": datum,
-        "format": "",
-        "type": 'string'
+        name: datum,
+        format: '',
+        type: 'string'
       }
       wordpressFields.push(newField)
     })
 
     const allMyStatus = {
-      "status2": "J'ai envie de réaliser ce projet",
-      "status3": "J'ai déjà commencé ce projet",
-      "status4": "J'ai terminé ce projet"
-  }
+      status2: "J'ai envie de réaliser ce projet",
+      status3: "J'ai déjà commencé ce projet",
+      status4: "J'ai terminé ce projet"
+    }
 
     // ROWS
     for (const datum of Object.keys(rawData)) {
-      let newDatum = {}
+      const newDatum = {}
       newDatum[0] = Math.random() * (45.9 - 45.5) + 45.5
       newDatum[1] = Math.random() * (4.95 - 4.75) + 4.7
       newDatum[2] = 'location-dot'
@@ -104,14 +104,14 @@ module.exports.toGeoJson = function (rawData) {
           newDatum[5] = rawData[datum][column].contact
           newDatum[8] = allMyStatus[rawData[datum][column].status]
         } else if (column === 'content') {
-          newDatum[4] = rawData[datum][column].rendered.replace(/(<([^>]+)>)/gi, "")
+          newDatum[4] = rawData[datum][column].rendered.replace(/(<([^>]+)>)/gi, '')
         } else if (column === 'type') {
           newDatum[7] = rawData[datum][column]
         } else if (column === '_links') {
           if (rawData[datum][column].hasOwnProperty('acf:attachment') && rawData[datum][column]['acf:attachment'][0].hasOwnProperty('href')) {
-            newDatum[6] = rawData[datum][column]['acf:attachment'][0]['href']
+            newDatum[6] = rawData[datum][column]['acf:attachment'][0].href
           } else {
-            newDatum[6]='';
+            newDatum[6] = ''
           }
         } else {
           newDatum[count] = rawData[datum][column]
@@ -124,7 +124,7 @@ module.exports.toGeoJson = function (rawData) {
           photos secondaire (bonus)
 
          */
-        //console.log(column)
+        // console.log(column)
 
         count++
       }
@@ -132,9 +132,9 @@ module.exports.toGeoJson = function (rawData) {
     }
   }
   return {
-    "fields": wordpressFields,
-    "rows": rows
-  };
+    fields: wordpressFields,
+    rows: rows
+  }
 }
 
 /**
@@ -148,22 +148,20 @@ module.exports.wordpressRequest = function (wordpressPostUrl) {
       url: 'https://' + wordpressPostUrl,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       }
     }, function (error, response, body) {
-      if(body) {
+      if (body) {
         const rawDataFromWordpress = JSON.parse(body)
-        if (rawDataFromWordpress !== null){
+        if (rawDataFromWordpress !== null) {
           resolve(rawDataFromWordpress)
         } else {
-          reject("error from wordpress request")
+          reject('error from wordpress request')
         }
       }
-    });
+    })
   })
 }
-
-
 
 /*        ABOUT IMAGES              */
 module.exports.insertWPImages = function (WPData) {
@@ -172,25 +170,23 @@ module.exports.insertWPImages = function (WPData) {
   })
 }
 
-
-
-function extractImageUrl(rows, fields) {
+function extractImageUrl (rows, fields) {
   console.log('toto')
-  let promises = []
-  for (const rowNumber in rows){
+  const promises = []
+  for (const rowNumber in rows) {
     promises.push(getImageFromUrl(rows[rowNumber]))
   }
   return Promise.all(promises).then((values) => {
     return {
-      "fields": fields,
-      "rows": values
+      fields: fields,
+      rows: values
     }
   })
 }
 
-function getImageFromUrl(WPitem) {
+function getImageFromUrl (WPitem) {
   // todo refacto --> this function has a quasi-clone
-  if (WPitem[6]===''){ // Pictures are not always present.
+  if (WPitem[6] === '') { // Pictures are not always present.
     return WPitem
   } else {
     return new Promise(function (resolve, reject) {
@@ -198,28 +194,24 @@ function getImageFromUrl(WPitem) {
         url: WPitem[6],
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         }
       }, function (error, response, body) {
-        if(body) {
+        if (body) {
           const rawDataFromWordpress = JSON.parse(body)
-          if (rawDataFromWordpress !== null){
+          if (rawDataFromWordpress !== null) {
             WPitem[6] = rawDataFromWordpress.guid.rendered
             console.log('----------------------')
             console.log(WPitem)
             resolve(WPitem)
           } else {
-            reject("error from wordpress request")
+            reject('error from wordpress request')
           }
         }
-      });
+      })
     })
   }
 }
-
-
-
-
 
 /*          ABOUT COORDINATES           */
 module.exports.insertCoord = function (WPData) {
@@ -227,4 +219,3 @@ module.exports.insertCoord = function (WPData) {
     resolve(WPData)
   })
 }
-
