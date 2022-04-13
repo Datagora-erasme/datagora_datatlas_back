@@ -57,8 +57,9 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
       return DataWordpress.toGeoJson(rawData)
     }).then(function (data) {
       return DataWordpress.insertWPImages(data)
+    }).then(function (data) {
+      return DataWordpress.insertWPKeywords(data)
     }).then(function (rawData) {
-      console.log('renvoi des données complètes')
       res.send(rawData)
     })
   }

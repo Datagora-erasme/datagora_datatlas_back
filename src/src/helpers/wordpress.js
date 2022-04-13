@@ -72,6 +72,12 @@ module.exports.toGeoJson = function (rawData) {
       type: 'string'
     }
     wordpressFields.push(newFieldStatus)
+    const newFieldTags = {
+      name: 'tags',
+      format: '',
+      type: 'string'
+    }
+    wordpressFields.push(newFieldTags)
 
     // Other proper columns
     Object.keys(rawData[0]).forEach((datum) => {
@@ -95,7 +101,7 @@ module.exports.toGeoJson = function (rawData) {
       newDatum[0] = Math.random() * (45.9 - 45.5) + 45.5
       newDatum[1] = Math.random() * (4.95 - 4.75) + 4.7
       newDatum[2] = 'location-dot'
-      let count = 9
+      let count = 10
       for (const column of Object.keys(rawData[datum])) {
         if (column === 'title') {
           newDatum[count] = rawData[datum][column].rendered
@@ -113,19 +119,14 @@ module.exports.toGeoJson = function (rawData) {
           } else {
             newDatum[6] = ''
           }
+          if (rawData[datum][column].hasOwnProperty('wp:term') && rawData[datum][column]['wp:term'][0].hasOwnProperty('href')) {
+            newDatum[9] = rawData[datum][column]['wp:term'][0].href
+          } else {
+            newDatum[9] = ''
+          }
         } else {
           newDatum[count] = rawData[datum][column]
         }
-        /*
-          WE WANT :
-         Filtre etat / type_de_projet = Dans ma rue / Dans mon truc -
-          image => placeholder 1
-          mots clefs :
-          photos secondaire (bonus)
-
-         */
-        // console.log(column)
-
         count++
       }
       rows.push(newDatum)
@@ -200,12 +201,52 @@ function getImageFromUrl (WPitem) {
           const rawDataFromWordpress = JSON.parse(body)
           if (rawDataFromWordpress !== null) {
             WPitem[6] = rawDataFromWordpress.guid.rendered
-            //console.log('----------------------')
-            //console.log(WPitem)
+            // console.log('----------------------')
+            // console.log(WPitem)
             resolve(WPitem)
           } else {
             reject('error from wordpress request')
           }
+        }
+      })
+    })
+  }
+}
+
+/*          ABOUT KEYWORDS           */
+module.exports.insertWPKeywords = function (WPData) {
+  const promises = []
+  for (const rowNumber in WPData.rows) {
+    promises.push(getTagsFromUrl(WPData.rows[rowNumber]))
+  }
+  return Promise.all(promises).then((values) => {
+    return WPData
+  })
+}
+
+
+function getTagsFromUrl (WPitem) {
+  const arrayTags = []
+  if (WPitem[9] === '') { // Pictures are not always present.
+    return WPitem
+  } else {
+    return new Promise(function (resolve, reject) {
+      request({
+        url: WPitem[9],
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }, function (error, response, body) {
+        if (body) {
+          const rawDataFromWordpress = JSON.parse(body)
+          for (const rowNumber in rawDataFromWordpress) {
+            arrayTags.push(rawDataFromWordpress[rowNumber]['name'])
+          }
+          WPitem[9] = arrayTags
+          resolve(WPitem)
+        } else {
+          reject('error from wordpress request')
         }
       })
     })
