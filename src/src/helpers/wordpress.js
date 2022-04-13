@@ -254,8 +254,50 @@ function getTagsFromUrl (WPitem) {
 }
 
 /*          ABOUT COORDINATES           */
-module.exports.insertCoord = function (WPData) {
-  return new Promise(function (resolve, reject) {
-    resolve(WPData)
+module.exports.insertWPCoordinates = function (WPData) {
+  const promises = []
+  for (const rowNumber in WPData.rows) {
+    promises.push(getCoordinatesFromAddress(WPData.rows[rowNumber]))
+  }
+  return Promise.all(promises).then((values) => {
+    return WPData
   })
+}
+
+function getCoordinatesFromAddress (WPitem) {
+  return new Promise(function (resolve, reject) {
+    const urlAPI = 'https://api-adresse.data.gouv.fr/search/?q=' + normalizeAddress(WPitem[3]) + '&limit=1' + '&lat=45.5&lon=4.7'
+    request({
+      url: urlAPI,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }, function (error, response, body) {
+      if (body) {
+        const rawDataFromAPI = JSON.parse(body)
+        console.log(WPitem[3])
+        console.log(rawDataFromAPI)
+        WPitem[0] = rawDataFromAPI.features[0].geometry.coordinates[1]
+        WPitem[1] = rawDataFromAPI.features[0].geometry.coordinates[0]
+        resolve(WPitem)
+      } else {
+        reject('error from wordpress request')
+      }
+    })
+  })
+}
+
+/**
+ *
+ * @param rawAddress
+ * @returns {string}
+ */
+function normalizeAddress (rawAddress = '') {
+  /*
+  It appears that we need to :
+  - replace white spaces with +
+  - lowercase ?
+   */
+  return rawAddress.replace(' ', '+')
 }

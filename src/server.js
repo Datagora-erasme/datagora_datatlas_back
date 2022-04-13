@@ -59,6 +59,8 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
       return DataWordpress.insertWPImages(data)
     }).then(function (data) {
       return DataWordpress.insertWPKeywords(data)
+    }).then(function (data) {
+      return DataWordpress.insertWPCoordinates(data)
     }).then(function (rawData) {
       res.send(rawData)
     })
