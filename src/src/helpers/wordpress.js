@@ -98,8 +98,8 @@ module.exports.toGeoJson = function (rawData) {
     // ROWS
     for (const datum of Object.keys(rawData)) {
       const newDatum = {}
-      newDatum[0] = Math.random() * (45.9 - 45.5) + 45.5
-      newDatum[1] = Math.random() * (4.95 - 4.75) + 4.7
+      newDatum[0] = 0
+      newDatum[1] = 0
       newDatum[2] = 'location-dot'
       let count = 10
       for (const column of Object.keys(rawData[datum])) {
@@ -276,8 +276,6 @@ function getCoordinatesFromAddress (WPitem) {
     }, function (error, response, body) {
       if (body) {
         const rawDataFromAPI = JSON.parse(body)
-        console.log(WPitem[3])
-        console.log(rawDataFromAPI)
         WPitem[0] = rawDataFromAPI.features[0].geometry.coordinates[1]
         WPitem[1] = rawDataFromAPI.features[0].geometry.coordinates[0]
         resolve(WPitem)

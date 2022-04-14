@@ -1,17 +1,18 @@
 // IMPORTS
 const express = require('express')
+const formidable = require('formidable')
 const cors = require('cors')
-const formidableMiddleware = require('express-formidable')
 require('dotenv').config()
 const KeplerConfiguration = require('./KeplerConfiguration')
 const DataNotion = require('./src/helpers/notion')
 const DataWordpress = require('./src/helpers/wordpress')
+const path = require('path')
+const fs = require('fs')
 
 // SERVER CONFIGURATION
 const app = express()
 app.listen(process.env.DATATLAS_BACK_END_PORT)
 console.log('Listening on this port :', process.env.DATATLAS_BACK_END_PORT)
-app.use(formidableMiddleware())
 app.use(cors())
 
 // INTERNAL TOOLS
@@ -66,3 +67,34 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
     })
   }
 })
+
+// todo : check security : anyone can send data...
+app.post('/api/upload', (req, res, next) => {
+  const form = formidable({ multiples: true })
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err)
+      return
+    }
+    const tempFileLocation = files.file.filepath
+    const publicFileLocation = path.join(__dirname, '/public/img/', files.file.originalFilename)
+    moveFile(tempFileLocation, publicFileLocation).then(r => res.send(publicFileLocation))
+  })
+})
+
+/**
+ * Move a file from a place to another one.
+ * @param from
+ * @param to
+ * @returns {Promise<unknown>}
+ */
+function moveFile (from, to) {
+  const source = fs.createReadStream(from)
+  const dest = fs.createWriteStream(to)
+
+  return new Promise((resolve, reject) => {
+    source.on('end', resolve)
+    source.on('error', reject)
+    source.pipe(dest)
+  })
+}
