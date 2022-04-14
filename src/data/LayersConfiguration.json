@@ -1,46 +1,41 @@
 {
-  "siteTitle": "DatAtlas-Industries",
-  "mapboxToken": "pk.eyJ1IjoieXNpb3VkYSIsImEiOiJja3JnZ2k1cDg1cTMxMnJueGV6cDU4c25iIn0.td9NqwcqkUW1VeRIPB2oTA",
-  "defaultMapLocation": {
-      "latitude": 0,
-      "longitude": 0,
-      "zoom": 10
-  },
-  "defaultMapBoxStyleUrl": "mapbox://styles/mapbox/light-v10",
-  "modules": {
-      "exportDataBtn": true
-  },
-  "theme": {
-      "filterSidePanel": {
-          "buttonColorRange": [
-              "#3d8490",
-              "#27536f",
-              "#df7160"
-          ]
-      }
-  },
-  "bottomRightButtons": [
-      {
-          "text": "+ Ajouter un lieu",
-          "url": "https://form.typeform.com/to/V1f3GNXR"
-      },
-      {
-          "text": "+ Ajouter un évenement",
-          "url": "https://form.typeform.com/to/vTRYrYpv?typeform-source=tank-tiga.webflow.io"
-      }
-  ],
-  "layers": [
-      {
-          "name": "Structure Médiation",
-          "type": "notion",
-          "url": "https://dev-back-datatlas.datagora.erasme.org/api/data/notion/notion_tiga",
-          "id": 2
-      },
-      {
-          "name": "Evenements",
-          "type": "notion",
-          "url": "https://dev-back-datatlas.datagora.erasme.org/api/data/notion/notion_mediation/",
-          "id": 1
-      }
-  ]
+    "siteTitle": "Instance Name",
+    "mapboxToken": "mapboxToken",
+    "defaultMapLocation": {
+        "latitude": 0,
+        "longitude": 0,
+        "zoom": 10
+    },
+    "defaultMapBoxStyleUrl": "mapboxstyleurl",
+    "modules": {
+        "exportDataBtn": true
+    },
+    "theme": {
+        "name": "Theme name",
+        "filterSidePanel": {
+            "buttonColorRange": [
+                "hexcolor",
+                "hexcolor",
+                "hexcolor"
+            ]
+        }
+    },
+    "bottomRightButtons": [
+        {
+            "text": "String",
+            "url": "url"
+        },
+        {
+            "text": "String",
+            "url": "url"
+        }
+    ],
+    "layers": [
+        {
+            "name": "String",
+            "type": "type : geojson / notion / wordpress",
+            "url": "url",
+            "id": 1
+        }
+    ]
 }
