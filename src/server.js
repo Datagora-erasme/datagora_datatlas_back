@@ -82,6 +82,14 @@ app.post('/api/upload', (req, res, next) => {
   })
 })
 
+app.get('/api/upload', (req, res) => {
+  const files = []
+  fs.readdirSync(path.join(__dirname, '/public/img/')).forEach(file => {
+    files.push(file)
+  })
+  res.status(200).json(files)
+})
+
 /**
  * Move a file from a place to another one.
  * @param from
