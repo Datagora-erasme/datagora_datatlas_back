@@ -20,7 +20,6 @@ app.route('/api/test/')
   .get(function (req, res) {
     res.status(200).send('test')
   })
-
 // todo : check security : anyone can send data...
 app.get('/api/conf/:confWanted/', (req, res) => {
   if (req.params.confWanted === 'kepler') {
@@ -43,7 +42,6 @@ app.post('/api/conf/:confWanted/', (req, res) => {
     res.send('unknown data') // todo place a proper status code
   }
 })
-
 // todo : check security : anyone can send data...
 app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
   if (req.params.dataType === 'notion') {
@@ -67,9 +65,15 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
     })
   }
 })
-
+app.get('/api/upload/', (req, res) => {
+  const files = []
+  fs.readdirSync(path.join(__dirname, '/public/img/')).forEach(file => {
+    files.push(file)
+  })
+  res.status(200).json(files)
+})
 // todo : check security : anyone can send data...
-app.post('/api/upload', (req, res, next) => {
+app.post('/api/upload/', (req, res, next) => {
   const form = formidable({ multiples: true })
   form.parse(req, (err, fields, files) => {
     if (err) {
@@ -82,13 +86,6 @@ app.post('/api/upload', (req, res, next) => {
   })
 })
 
-app.get('/api/upload', (req, res) => {
-  const files = []
-  fs.readdirSync(path.join(__dirname, '/public/img/')).forEach(file => {
-    files.push(file)
-  })
-  res.status(200).json(files)
-})
 
 // INTERNAL TOOLS
 /**
