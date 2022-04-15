@@ -15,9 +15,6 @@ app.listen(process.env.DATATLAS_BACK_END_PORT)
 console.log('Listening on this port :', process.env.DATATLAS_BACK_END_PORT)
 app.use(cors())
 
-// INTERNAL TOOLS
-const has = Object.prototype.hasOwnProperty
-
 // ROUTES
 app.route('/api/test/')
   .get(function (req, res) {
@@ -57,11 +54,14 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
     DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
       return DataWordpress.toGeoJson(rawData)
     }).then(function (data) {
-      return DataWordpress.insertWPImages(data)
-    }).then(function (data) {
-      return DataWordpress.insertWPKeywords(data)
-    }).then(function (data) {
-      return DataWordpress.insertWPCoordinates(data)
+      const promises = [
+        DataWordpress.insertWPImages(data),
+        DataWordpress.insertWPKeywords(data),
+        DataWordpress.insertWPCoordinates(data)
+      ]
+      return Promise.all(promises).then((values) => {
+        return data
+      })
     }).then(function (rawData) {
       res.send(rawData)
     })
@@ -89,6 +89,13 @@ app.get('/api/upload', (req, res) => {
   })
   res.status(200).json(files)
 })
+
+// INTERNAL TOOLS
+/**
+ * Checks if object has a property.
+ * @type {(v: PropertyKey) => boolean}
+ */
+const has = Object.prototype.hasOwnProperty
 
 /**
  * Move a file from a place to another one.
