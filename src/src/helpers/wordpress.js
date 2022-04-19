@@ -3,7 +3,6 @@
  */
 
 const request = require('request')
-const { insertWPImages } = require('./wordpress')
 
 /**
  * Sort data from a wordpress table into a coherent GEOjson format.
@@ -224,7 +223,6 @@ module.exports.insertWPKeywords = function (WPData) {
   })
 }
 
-
 function getTagsFromUrl (WPitem) {
   const arrayTags = []
   if (WPitem[9] === '') { // Pictures are not always present.
@@ -241,7 +239,7 @@ function getTagsFromUrl (WPitem) {
         if (body) {
           const rawDataFromWordpress = JSON.parse(body)
           for (const rowNumber in rawDataFromWordpress) {
-            arrayTags.push(rawDataFromWordpress[rowNumber]['name'])
+            arrayTags.push(rawDataFromWordpress[rowNumber].name)
           }
           WPitem[9] = arrayTags
           resolve(WPitem)
