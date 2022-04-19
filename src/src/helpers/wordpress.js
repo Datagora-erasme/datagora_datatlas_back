@@ -184,7 +184,6 @@ function extractImageUrl (rows, fields) {
 }
 
 function getImageFromUrl (WPitem) {
-  // todo refacto --> this function has a quasi-clone
   if (WPitem[6] === '') { // Pictures are not always present.
     return WPitem
   } else {
@@ -200,8 +199,6 @@ function getImageFromUrl (WPitem) {
           const rawDataFromWordpress = JSON.parse(body)
           if (rawDataFromWordpress !== null) {
             WPitem[6] = rawDataFromWordpress.guid.rendered
-            // console.log('----------------------')
-            // console.log(WPitem)
             resolve(WPitem)
           } else {
             reject('error from wordpress request')
@@ -225,7 +222,7 @@ module.exports.insertWPKeywords = function (WPData) {
 
 function getTagsFromUrl (WPitem) {
   const arrayTags = []
-  if (WPitem[9] === '') { // Pictures are not always present.
+  if (WPitem[9] === '') { // Tags are not always present.
     return WPitem
   } else {
     return new Promise(function (resolve, reject) {
