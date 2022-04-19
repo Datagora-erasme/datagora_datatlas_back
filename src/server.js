@@ -15,6 +15,30 @@ app.listen(process.env.DATATLAS_BACK_END_PORT)
 console.log('Listening on this port :', process.env.DATATLAS_BACK_END_PORT)
 app.use(cors())
 
+// INTERNAL TOOLS
+/**
+ * Checks if object has a property.
+ * @type {(v: PropertyKey) => boolean}
+ */
+const has = Object.prototype.hasOwnProperty
+
+/**
+ * Move a file from a place to another one.
+ * @param from
+ * @param to
+ * @returns {Promise<unknown>}
+ */
+function moveFile (from, to) {
+  const source = fs.createReadStream(from)
+  const dest = fs.createWriteStream(to)
+
+  return new Promise((resolve, reject) => {
+    source.on('end', resolve)
+    source.on('error', reject)
+    source.pipe(dest)
+  })
+}
+
 // ROUTES
 app.route('/api/test/')
   .get(function (req, res) {
@@ -32,15 +56,21 @@ app.get('/api/conf/:confWanted/', (req, res) => {
 })
 // todo : check security : anyone can send data...
 app.post('/api/conf/:confWanted/', (req, res) => {
-  if (req.params.confWanted === 'kepler' && has.call(req.fields, 'configuration_kepler')) {
-    KeplerConfiguration.storeConfigurationKepler(req.fields.configuration_kepler)
-    res.status(200).send()
-  } else if (req.params.confWanted === 'instance' && has.call(req.fields, 'configuration_instance')) {
-    KeplerConfiguration.storeConfigurationLayers(req.fields.configuration_instance)
-    res.status(200).send()
-  } else {
-    res.send('unknown data') // todo place a proper status code
-  }
+  const form = formidable({ multiples: true })
+  form.parse(req, (err, fields) => {
+    if (err) {
+      return
+    }
+    if (req.params.confWanted === 'kepler' && has.call(fields, 'configuration_kepler')) {
+      KeplerConfiguration.storeConfigurationKepler(fields.configuration_kepler)
+      res.status(200).send()
+    } else if (req.params.confWanted === 'instance' && has.call(fields, 'configuration_instance')) {
+      KeplerConfiguration.storeConfigurationLayers(fields.configuration_instance)
+      res.status(200).send()
+    } else {
+      res.send('unknown data') // todo place a proper status code
+    }
+  })
 })
 // todo : check security : anyone can send data...
 app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
@@ -85,28 +115,3 @@ app.post('/api/upload/', (req, res, next) => {
     moveFile(tempFileLocation, publicFileLocation).then(r => res.send(publicFileLocation))
   })
 })
-
-
-// INTERNAL TOOLS
-/**
- * Checks if object has a property.
- * @type {(v: PropertyKey) => boolean}
- */
-const has = Object.prototype.hasOwnProperty
-
-/**
- * Move a file from a place to another one.
- * @param from
- * @param to
- * @returns {Promise<unknown>}
- */
-function moveFile (from, to) {
-  const source = fs.createReadStream(from)
-  const dest = fs.createWriteStream(to)
-
-  return new Promise((resolve, reject) => {
-    source.on('end', resolve)
-    source.on('error', reject)
-    source.pipe(dest)
-  })
-}
