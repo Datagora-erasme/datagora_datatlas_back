@@ -66,7 +66,7 @@ module.exports.toGeoJson = function (rawData) {
     }
     wordpressFields.push(newFieldType)
     const newFieldStatus = {
-      name: 'acf_status',
+      name: 'status_projets',
       format: '',
       type: 'string'
     }
