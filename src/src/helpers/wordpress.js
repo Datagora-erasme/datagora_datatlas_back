@@ -83,6 +83,13 @@ module.exports.toGeoJson = function (rawData) {
       type: 'integer'
     }
     wordpressFields.push(newFieldTrees)
+    const newFieldTypesProjets = {
+      name: 'types_projet',
+      format: '',
+      type: 'string'
+    }
+    wordpressFields.push(newFieldTypesProjets)
+
 
     // Other proper columns
     Object.keys(rawData[0]).forEach((datum) => {
@@ -99,6 +106,13 @@ module.exports.toGeoJson = function (rawData) {
       status3: "J'ai déjà commencé ce projet",
       status4: "J'ai terminé ce projet"
     }
+    const allProjectTypes = {
+      immeuble: 'Dans mon immeuble',
+      rue: 'Dans ma rue',
+      ecole: 'Dans mon école',
+      entreprise: 'Dans mon entreprise',
+      chantier: 'Sur mon chantier'
+    }
 
     // ROWS
     for (const datum of Object.keys(rawData)) {
@@ -106,7 +120,7 @@ module.exports.toGeoJson = function (rawData) {
       newDatum[0] = 0
       newDatum[1] = 0
       newDatum[2] = 'location-dot'
-      let count = 11
+      let count = 12
       for (const column of Object.keys(rawData[datum])) {
         if (column === 'title') {
           newDatum[count] = rawData[datum][column].rendered
@@ -114,7 +128,7 @@ module.exports.toGeoJson = function (rawData) {
           newDatum[3] = rawData[datum][column].place_label
           newDatum[5] = rawData[datum][column].contact
           newDatum[8] = allMyStatus[rawData[datum][column].status]
-          newDatum[10] = rawData[datum][column].trees
+          newDatum[11] = allProjectTypes[rawData[datum][column].type]
         } else if (column === 'content') {
           newDatum[4] = rawData[datum][column].rendered.replace(/(<([^>]+)>)/gi, '')
         } else if (column === 'type') {
