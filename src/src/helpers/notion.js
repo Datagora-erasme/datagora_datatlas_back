@@ -57,13 +57,13 @@ module.exports.toGeoJson = function (rawData, queryParameters) {
           newDatum[count] = value
           // ******* GET MULTISELECT *********
         } else if (line.properties[datum].type === 'multi_select') {
-          const multi_select = []
+          const multiSelect = []
           line.properties[datum].multi_select.forEach((item) => {
-            multi_select.push(item.name)
+            multiSelect.push(item.name)
           })
           /* Comment one of the two below */
-          newDatum[count] = multi_select // If we want all the items in an array.
-          // newDatum[count] = multi_select[0] // If we only want the first item.
+          newDatum[count] = multiSelect // If we want all the items in an array.
+          // newDatum[count] = multiSelect[0] // If we only want the first item.
           // ******* GET URL *********
         } else if (line.properties[datum].type === 'url') {
           newDatum[count] = line.properties[datum].url
@@ -115,13 +115,13 @@ module.exports.toGeoJson = function (rawData, queryParameters) {
 
 /**
  * Requests a notion page (its id is in the parameter) and returns a raw json result.
- * @param id_notion_table
+ * @param idNotionTable
  * @returns {Promise<unknown>}
  */
-module.exports.notionRequest = function (id_notion_table) {
+module.exports.notionRequest = function (idNotionTable) {
   return new Promise(function (resolve, reject) {
     request({
-      url: 'https://api.notion.com/v1/databases/' + id_notion_table + '/query',
+      url: 'https://api.notion.com/v1/databases/' + idNotionTable + '/query',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

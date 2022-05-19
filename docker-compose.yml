@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile.dev
     restart: always
     ports:
-      - 0.0.0.0:3000:4000
+      - "0.0.0.0:3000:4000"
     volumes:
       - ./src:/src
     command: npm run dev
