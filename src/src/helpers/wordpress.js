@@ -185,12 +185,15 @@ module.exports.wordpressRequest = function (wordpressPostUrl) {
         'Content-Type': 'application/json'
       }
     }, function (error, response, body) {
+      if (error) {
+        reject(new Error(error.stack))
+      }
       if (body) {
         const rawDataFromWordpress = JSON.parse(body)
         if (rawDataFromWordpress !== null) {
           resolve(rawDataFromWordpress)
         } else {
-          reject('error from wordpress request')
+          reject(new Error('error from wordpress request'))
         }
       }
     })
@@ -229,13 +232,16 @@ function getImageFromUrl (WPitem) {
           'Content-Type': 'application/json'
         }
       }, function (error, response, body) {
+        if (error) {
+          reject(new Error(error.stack))
+        }
         if (body) {
           const rawDataFromWordpress = JSON.parse(body)
           if (rawDataFromWordpress !== null) {
             WPitem[6] = rawDataFromWordpress.guid.rendered
             resolve(WPitem)
           } else {
-            reject('error from wordpress request')
+            reject(new Error('error from wordpress request'))
           }
         }
       })
@@ -267,6 +273,9 @@ function getTagsFromUrl (WPitem) {
           'Content-Type': 'application/json'
         }
       }, function (error, response, body) {
+        if (error) {
+          reject(new Error(error.stack))
+        }
         if (body) {
           const rawDataFromWordpress = JSON.parse(body)
           for (const rowNumber in rawDataFromWordpress) {
@@ -275,7 +284,7 @@ function getTagsFromUrl (WPitem) {
           WPitem[9] = arrayTags
           resolve(WPitem)
         } else {
-          reject('error from wordpress request')
+          reject(new Error('error from wordpress request'))
         }
       })
     })
@@ -303,13 +312,16 @@ function getCoordinatesFromAddress (WPitem) {
         'Content-Type': 'application/json'
       }
     }, function (error, response, body) {
+      if (error) {
+        reject(new Error(error.stack))
+      }
       if (body) {
         const rawDataFromAPI = JSON.parse(body)
         WPitem[0] = rawDataFromAPI.features[0].geometry.coordinates[1]
         WPitem[1] = rawDataFromAPI.features[0].geometry.coordinates[0]
         resolve(WPitem)
       } else {
-        reject('error from wordpress request')
+        reject(new Error('error from wordpress request'))
       }
     })
   })
