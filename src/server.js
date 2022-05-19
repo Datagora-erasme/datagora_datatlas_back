@@ -45,6 +45,9 @@ app.route('/api/test/')
     res.status(200).send('test')
   })
 
+/**
+ * @param req.params.confWanted
+ */
 app.get('/api/conf/:confWanted/', (req, res) => {
   if (req.params.confWanted === 'kepler') {
     res.status(200).send(KeplerConfiguration.getKeplerConfiguration())
@@ -55,6 +58,12 @@ app.get('/api/conf/:confWanted/', (req, res) => {
   }
 })
 
+/**
+ * @param req
+ * @param rq.fields
+ * @param req.fields.configuration_kepler
+ * @param req.fields.configuration_instance
+ */
 app.post('/api/conf/:confWanted/', (req, res) => {
   if (
     req.headers.authorization &&
@@ -81,7 +90,10 @@ app.post('/api/conf/:confWanted/', (req, res) => {
   }
 })
 
-app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
+/**
+ * @param req.params.dataWanted
+ */
+app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
   if (req.params.dataType === 'notion') {
     DataNotion.notionRequest(req.params.dataWanted).then(function (response) {
       res.status(200).send(DataNotion.toGeoJson(response, req.query))
@@ -95,7 +107,7 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res, next) {
         DataWordpress.insertWPKeywords(data),
         DataWordpress.insertWPCoordinates(data)
       ]
-      return Promise.all(promises).then((values) => {
+      return Promise.all(promises).then(() => {
         return data
       })
     }).then(function (rawData) {
@@ -126,7 +138,7 @@ app.post('/api/upload/', (req, res, next) => {
       }
       const tempFileLocation = files.file.filepath
       const publicFileLocation = path.join(__dirname, '/public/img/', files.file.originalFilename)
-      moveFile(tempFileLocation, publicFileLocation).then(r => res.send(publicFileLocation))
+      moveFile(tempFileLocation, publicFileLocation).then(() => res.send(publicFileLocation))
       res.status(200)
     })
   } else {

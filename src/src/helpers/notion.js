@@ -7,6 +7,8 @@ const request = require('request')
 /**
  * Sort data from a notion table into a coherent GEOjson format.
  * @param rawData The data from the notion table.
+ * @param queryParameters
+ * @param queryParameters.pastevent
  * @returns {{fields: *[], rows: *[]}}
  */
 module.exports.toGeoJson = function (rawData, queryParameters) {
@@ -129,26 +131,17 @@ module.exports.notionRequest = function (idNotionTable) {
         Authorization: 'Bearer ' + process.env.NOTION_API_KEY
       }
     }, function (error, response, body) {
+      if (error) {
+        reject(new Error(error.stack))
+      }
       if (body) {
         const rawDataFromNotion = JSON.parse(body).results
         if (rawDataFromNotion !== null) {
           resolve(rawDataFromNotion)
         } else {
-          reject('error from notion request')
+          reject(new Error(error.stack))
         }
       }
     })
   })
-}
-
-/*                                          METHODS                                                                   */
-// todo P-A : delete this method ?
-const convertJsonArrayToSimpleStringArray = (data) => {
-  const arrayMS = []
-  for (const item of data) {
-    if (item.name !== undefined) {
-      arrayMS.push(item.name)
-    }
-  }
-  return arrayMS
 }

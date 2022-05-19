@@ -7,6 +7,13 @@ const request = require('request')
 /**
  * Sort data from a WordPress table into a coherent GEOjson format.
  * @param rawData The data from the notion table.
+ * @param rawData[][].rendered
+ * @param rawData[][].place_label
+ * @param rawData[][].contact
+ * @param rawData[][].trees
+ * @param rawData[][].guid
+ * @param rawData[][].geometry
+ * @param rawData[][].coordinates
  * @returns {{fields: *[], rows: *[]}}
  */
 module.exports.toGeoJson = function (rawData) {
@@ -134,12 +141,18 @@ module.exports.toGeoJson = function (rawData) {
         } else if (column === 'type') {
           newDatum[7] = rawData[datum][column]
         } else if (column === '_links') {
-          if (rawData[datum][column].hasOwnProperty('acf:attachment') && rawData[datum][column]['acf:attachment'][0].hasOwnProperty('href')) {
+          if (
+            Object.prototype.hasOwnProperty.call(rawData[datum][column], 'acf:attachment') &&
+            Object.prototype.hasOwnProperty.call(rawData[datum][column]['acf:attachment'][0], 'href')
+          ) {
             newDatum[6] = rawData[datum][column]['acf:attachment'][0].href
           } else {
             newDatum[6] = ''
           }
-          if (rawData[datum][column].hasOwnProperty('wp:term') && rawData[datum][column]['wp:term'][0].hasOwnProperty('href')) {
+          if (
+            Object.prototype.hasOwnProperty.call(rawData[datum][column], 'wp:term') &&
+            Object.prototype.hasOwnProperty.call(rawData[datum][column]['wp:term'][0], 'href')
+          ) {
             newDatum[9] = rawData[datum][column]['wp:term'][0].href
           } else {
             newDatum[9] = ''
@@ -186,7 +199,7 @@ module.exports.wordpressRequest = function (wordpressPostUrl) {
 
 /*        ABOUT IMAGES              */
 module.exports.insertWPImages = function (WPData) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
     resolve(extractImageUrl(WPData.rows, WPData.fields))
   })
 }
@@ -236,7 +249,7 @@ module.exports.insertWPKeywords = function (WPData) {
   for (const rowNumber in WPData.rows) {
     promises.push(getTagsFromUrl(WPData.rows[rowNumber]))
   }
-  return Promise.all(promises).then((values) => {
+  return Promise.all(promises).then(() => {
     return WPData
   })
 }
@@ -275,7 +288,7 @@ module.exports.insertWPCoordinates = function (WPData) {
   for (const rowNumber in WPData.rows) {
     promises.push(getCoordinatesFromAddress(WPData.rows[rowNumber]))
   }
-  return Promise.all(promises).then((values) => {
+  return Promise.all(promises).then(() => {
     return WPData
   })
 }
