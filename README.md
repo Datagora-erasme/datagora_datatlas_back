@@ -6,14 +6,14 @@ It proposes a simple API that can be requested by anyone who has been authorized
 
 ## Routes proposed
 
-| Route | Method | Explanation                                                                                            |
-|-------|--------|--------------------------------------------------------------------------------------------------------|
-| `/api/test/` | GET    | A simple test route that shall returns the string `test` to the requester                              |
-| `/api/conf/:confWanted/` | GET    | A route to request a stored configuration file                                                         |
-| `/api/conf/:confWanted/` | POST   | TODO : A route to store a configuration file                                                           |
+| Route                              | Method | Explanation                                                                                            |
+|------------------------------------|--------|--------------------------------------------------------------------------------------------------------|
+| `/api/test/`                       | GET    | A simple test route that shall returns the string `test` to the requester                              |
+| `/api/conf/:confWanted/`           | GET    | A route to request a stored configuration file                                                         |
+| `/api/conf/:confWanted/`           | POST   | A route to store a configuration file                                                                  |
 | `/api/data/:dataType/:dataWanted/` | GET    | A route to get data of a certain type (ex:`notion` or `wordpress`) in a certain page (the `dataWanted) |
-| `/api/upload/` | GET    | A route that sends a list of all stored file (pictures and logos mostly)                               |
-| `/api/upload/` | POST   | TODO : A route that stores a file on the back-office                                                   |
+| `/api/upload/`                     | GET    | A route that sends a list of all stored file (pictures and logos mostly)                               |
+| `/api/upload/`                     | POST   | A route that stores a file on the back-office                                                          |
 
 ## Installation
 

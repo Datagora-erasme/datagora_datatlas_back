@@ -5,7 +5,7 @@
 const request = require('request')
 
 /**
- * Sort data from a wordpress table into a coherent GEOjson format.
+ * Sort data from a WordPress table into a coherent GEOjson format.
  * @param rawData The data from the notion table.
  * @returns {{fields: *[], rows: *[]}}
  */
