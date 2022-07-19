@@ -120,6 +120,7 @@ module.exports.toGeoJson = function (rawData) {
       chantier: 'Sur mon chantier'
     }
 
+    console.log(rawData);
     // ROWS
     for (const datum of Object.keys(rawData)) {
       const newDatum = {}
@@ -292,6 +293,11 @@ function getTagsFromUrl (WPitem) {
 }
 
 /*          ABOUT COORDINATES           */
+/**
+ * NO LONGER USED. This method injects geographical coordinates in each object (using french government API)
+ * @param WPData
+ * @returns {Promise<Awaited<unknown>[]>}
+ */
 module.exports.insertWPCoordinates = function (WPData) {
   const promises = []
   for (const rowNumber in WPData.rows) {
@@ -302,6 +308,11 @@ module.exports.insertWPCoordinates = function (WPData) {
   })
 }
 
+/**
+ * NO LONGER USED.
+ * @param WPitem
+ * @returns {Promise<unknown>}
+ */
 function getCoordinatesFromAddress (WPitem) {
   return new Promise(function (resolve, reject) {
     const urlAPI = 'https://api-adresse.data.gouv.fr/search/?q=' + normalizeAddress(WPitem[3]) + '&limit=1' + '&lat=45.5&lon=4.7'
@@ -328,7 +339,7 @@ function getCoordinatesFromAddress (WPitem) {
 }
 
 /**
- *
+ * NO LONGER USED.
  * @param rawAddress
  * @returns {string}
  */
