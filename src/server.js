@@ -105,7 +105,6 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
       const promises = [
         DataWordpress.insertWPImages(data),
         DataWordpress.insertWPKeywords(data)
-        //DataWordpress.insertWPCoordinates(data)
       ]
       return Promise.all(promises).then(() => {
         return data
