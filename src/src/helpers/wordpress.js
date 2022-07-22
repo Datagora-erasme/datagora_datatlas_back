@@ -129,14 +129,14 @@ module.exports.toGeoJson = function (rawData) {
     // ROWS
     for (const datum of Object.keys(rawData)) {
       const newDatum = {}
-      newDatum[0] = 0
-      newDatum[1] = 0
       newDatum[2] = 'location-dot'
       let count = 13
       for (const column of Object.keys(rawData[datum])) {
         if (column === 'title') {
           newDatum[count] = rawData[datum][column].rendered
         } else if (column === 'acf') {
+          newDatum[0] = rawData[datum][column].place.lat
+          newDatum[1] = rawData[datum][column].place.lng
           newDatum[3] = rawData[datum][column].place_label
           newDatum[5] = rawData[datum][column].contact
           newDatum[8] = allMyStatus[rawData[datum][column].status]
