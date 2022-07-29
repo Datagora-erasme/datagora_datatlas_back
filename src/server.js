@@ -99,19 +99,27 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
       res.status(200).send(DataNotion.toGeoJson(response, req.query))
     })
   } else if (req.params.dataType === 'wordpress') {
-    DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
-      return DataWordpress.toGeoJson(rawData)
-    }).then(function (data) {
-      const promises = [
-        DataWordpress.insertWPImages(data),
-        DataWordpress.insertWPKeywords(data)
-      ]
-      return Promise.all(promises).then(() => {
-        return data
+    if (req.params.dataWanted === 'canographia.datagora.erasme.org/wp-json/wp/v2/trees_hotspot/') { // todo fix this ridicule discrimination
+      DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
+        return DataWordpress.treeToGeoJson(rawData)
+      }).then(function (rawData) {
+        res.status(200).send(rawData)
       })
-    }).then(function (rawData) {
-      res.status(200).send(rawData)
-    })
+    } else {
+      DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
+        return DataWordpress.toGeoJson(rawData)
+      }).then(function (data) {
+        const promises = [
+          DataWordpress.insertWPImages(data),
+          DataWordpress.insertWPKeywords(data)
+        ]
+        return Promise.all(promises).then(() => {
+          return data
+        })
+      }).then(function (rawData) {
+        res.status(200).send(rawData)
+      })
+    }
   }
 })
 

@@ -6,7 +6,7 @@ const request = require('request')
 
 /**
  * Sort data from a WordPress table into a coherent GEOjson format.
- * @param rawData The data from the notion table.
+ * @param rawData The data from the WP page.
  * @param rawData[][].rendered
  * @param rawData[][].place_label
  * @param rawData[][].contact
@@ -179,6 +179,98 @@ module.exports.toGeoJson = function (rawData) {
 }
 
 /**
+ * Sort data from a WordPress table into a coherent GEOjson format.
+ * @param rawData The data from the WP page.
+ * @param rawData[].acf.photo
+ * @param rawData[].acf.place_address
+ * @param rawData[].acf.place_zipcode
+ * @param rawData[].acf.place_city
+ */
+module.exports.treeToGeoJson = function (rawData) {
+  const wordpressFields = []
+  const rows = []
+
+  if (rawData) {
+    // FIELDS
+    const newFieldLat = {
+      name: 'latitude',
+      format: '',
+      type: 'real'
+    }
+    wordpressFields.push(newFieldLat)
+    const newFieldLon = {
+      name: 'longitude',
+      format: '',
+      type: 'real'
+    }
+    wordpressFields.push(newFieldLon)
+    const newFieldTitre = {
+      name: 'titre',
+      format: '',
+      type: 'string'
+    }
+    wordpressFields.push(newFieldTitre)
+    const newFieldNbArbres = {
+      name: 'nb_arbres',
+      format: '',
+      type: 'real'
+    }
+    wordpressFields.push(newFieldNbArbres)
+    const newFieldImg = {
+      name: 'img',
+      format: '',
+      type: 'string'
+    }
+    wordpressFields.push(newFieldImg)
+    const newFieldUrl = {
+      name: 'url',
+      format: '',
+      type: 'string'
+    }
+    wordpressFields.push(newFieldUrl)
+    // ROWS
+    for (const datum of Object.keys(rawData)) {
+      const newDatum = {}
+      const imgId = rawData[datum].acf.photo
+      const address = rawData[datum].acf.place_address + ' ' + rawData[datum].acf.place_zipcode + ' ' + rawData[datum].acf.place_city
+      let imgUrl
+      let latitude
+      let longitude
+
+      // todo refonte -> le routeur doit simplement appeler une fonction dans ce fichier et c'est cette fonction qui gérera les appels async
+      // Some data require to call other WP pages.
+      this.wordpressRequest('canographia.datagora.erasme.org/wp-json/wp/v2/media/' + imgId).then(function (imgWPContent) {
+        imgUrl = imgWPContent.guid.rendered
+        return imgUrl
+      }).then(function (imgUrl) {
+        return getCoordinatesFromRawAddress(address)
+      }).then(function (coord) {
+        longitude = coord[0]
+        latitude = coord[1]
+        console.log(longitude)
+        for (const column of Object.keys(rawData[datum])) {
+          if (column === 'title') {
+            newDatum[2] = rawData[datum][column].rendered
+          } else if (column === 'acf') {
+            newDatum[3] = rawData[datum][column].trees
+          }
+          newDatum[0] = 'latitude'
+          newDatum[1] = 'longitude'
+          // newDatum[4] = 'img' --> https://canographia.datagora.erasme.org/wp-json/wp/v2/media/3935  .guid.rendered
+          //  newDatum[5] = 'url'  -> link
+        }
+      })
+
+      rows.push(newDatum)
+    }
+  }
+  return {
+    fields: wordpressFields,
+    rows: rows
+  }
+}
+
+/**
  *
  * @param wordpressPostUrl
  * @returns {Promise<unknown>}
@@ -202,6 +294,29 @@ module.exports.wordpressRequest = function (wordpressPostUrl) {
         } else {
           reject(new Error('error from wordpress request'))
         }
+      }
+    })
+  })
+}
+
+function getCoordinatesFromRawAddress (adresse = '') {
+  return new Promise(function (resolve, reject) {
+    const urlAPI = 'https://api-adresse.data.gouv.fr/search/?q=' + normalizeAddress(adresse) + '&limit=1' + '&lat=45.5&lon=4.7'
+    request({
+      url: urlAPI,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }, function (error, response, body) {
+      if (error) {
+        reject(new Error(error.stack))
+      }
+      if (body) {
+        const rawDataFromAPI = JSON.parse(body)
+        resolve(rawDataFromAPI.center)
+      } else {
+        reject(new Error('error from wordpress request'))
       }
     })
   })
