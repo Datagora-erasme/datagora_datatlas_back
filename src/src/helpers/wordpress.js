@@ -188,7 +188,7 @@ module.exports.toGeoJson = function (rawData) {
  */
 module.exports.treeToGeoJson = function (rawData) {
   const wordpressFields = []
-  const rows = []
+  const wordpressRows = []
 
   if (rawData) {
     // FIELDS
@@ -247,26 +247,26 @@ module.exports.treeToGeoJson = function (rawData) {
       }).then(function (coord) {
         longitude = coord[0]
         latitude = coord[1]
-        console.log(longitude)
         for (const column of Object.keys(rawData[datum])) {
           if (column === 'title') {
             newDatum[2] = rawData[datum][column].rendered
           } else if (column === 'acf') {
             newDatum[3] = rawData[datum][column].trees
+          } else if (column === 'link') {
+            newDatum[5] = rawData[datum][column]
           }
-          newDatum[0] = 'latitude'
-          newDatum[1] = 'longitude'
+          newDatum[0] = latitude
+          newDatum[1] = longitude
           // newDatum[4] = 'img' --> https://canographia.datagora.erasme.org/wp-json/wp/v2/media/3935  .guid.rendered
-          //  newDatum[5] = 'url'  -> link
         }
+        console.log(newDatum)
+        wordpressRows.push(newDatum)
       })
-
-      rows.push(newDatum)
     }
   }
   return {
     fields: wordpressFields,
-    rows: rows
+    rows: wordpressRows
   }
 }
 
