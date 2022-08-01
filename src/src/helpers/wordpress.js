@@ -4,6 +4,123 @@
 
 const request = require('request')
 
+module.exports.treesToGeoJson = async function (url) {
+  const wordpressFields = []
+  const wordpressRows = []
+
+  const newFieldLat = {
+    name: 'latitude',
+    format: '',
+    type: 'real'
+  }
+  wordpressFields.push(newFieldLat)
+  const newFieldLon = {
+    name: 'longitude',
+    format: '',
+    type: 'real'
+  }
+  wordpressFields.push(newFieldLon)
+  const newFieldTitre = {
+    name: 'titre',
+    format: '',
+    type: 'string'
+  }
+  wordpressFields.push(newFieldTitre)
+  const newFieldNbArbres = {
+    name: 'nb_arbres',
+    format: '',
+    type: 'real'
+  }
+  wordpressFields.push(newFieldNbArbres)
+  const newFieldImg = {
+    name: 'img',
+    format: '',
+    type: 'string'
+  }
+  wordpressFields.push(newFieldImg)
+  const newFieldUrl = {
+    name: 'url',
+    format: '',
+    type: 'string'
+  }
+  wordpressFields.push(newFieldUrl)
+
+  return await this.wordpressRequest(url).then(function (WPContent) {
+    for (const data of Object.keys(WPContent)) {
+      const newDatum = {}
+
+      for (const column of Object.keys(WPContent[data])) {
+        if (column === 'title') {
+          newDatum[2] = WPContent[data][column].rendered
+        } else if (column === 'acf') {
+          newDatum[3] = WPContent[data][column].trees
+        } else if (column === 'link') {
+          newDatum[5] = WPContent[data][column]
+        }
+      }
+
+      wordpressRows.push(newDatum)
+    }
+    return {
+      fields: wordpressFields,
+      rows: wordpressRows
+    }
+  })
+}
+
+/* REUSABLE METHODS */
+
+/**
+ *
+ * @param wordpressPostUrl
+ * @returns {Promise<unknown>}
+ */
+module.exports.wordpressRequest = function (wordpressPostUrl) {
+  return new Promise(function (resolve, reject) {
+    request({
+      url: 'https://' + wordpressPostUrl,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }, function (error, response, body) {
+      if (error) {
+        reject(new Error(error.stack))
+      }
+      if (body) {
+        const rawDataFromWordpress = JSON.parse(body)
+        if (rawDataFromWordpress !== null) {
+          resolve(rawDataFromWordpress)
+        } else {
+          reject(new Error('error from wordpress request'))
+        }
+      }
+    })
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * Sort data from a WordPress table into a coherent GEOjson format.
  * @param rawData The data from the WP page.
@@ -270,34 +387,7 @@ module.exports.treeToGeoJson = function (rawData) {
   }
 }
 
-/**
- *
- * @param wordpressPostUrl
- * @returns {Promise<unknown>}
- */
-module.exports.wordpressRequest = function (wordpressPostUrl) {
-  return new Promise(function (resolve, reject) {
-    request({
-      url: 'https://' + wordpressPostUrl,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }, function (error, response, body) {
-      if (error) {
-        reject(new Error(error.stack))
-      }
-      if (body) {
-        const rawDataFromWordpress = JSON.parse(body)
-        if (rawDataFromWordpress !== null) {
-          resolve(rawDataFromWordpress)
-        } else {
-          reject(new Error('error from wordpress request'))
-        }
-      }
-    })
-  })
-}
+
 
 function getCoordinatesFromRawAddress (adresse = '') {
   return new Promise(function (resolve, reject) {

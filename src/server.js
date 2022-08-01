@@ -101,11 +101,15 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
   } else if (req.params.dataType === 'wordpress') {
     // These urls have to be harcoded because they are humanly picked. :/
     if (req.params.dataWanted === 'canographia.datagora.erasme.org/wp-json/wp/v2/trees_hotspot/') {
+      DataWordpress.treesToGeoJson(req.params.dataWanted).then(function (properGEOjsonData) {
+        res.status(200).send(properGEOjsonData)
+      })
+      /*
       DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
         return DataWordpress.treeToGeoJson(rawData)
       }).then(function (rawData) {
         res.status(200).send(rawData)
-      })
+      }) */
     } else {
       DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
         return DataWordpress.toGeoJson(rawData)
