@@ -83,7 +83,7 @@ module.exports.treesToGeoJson = async function (url) {
 /* REUSABLE METHODS */
 
 /**
- *
+ * Sends the back the raw content of a json webpage.
  * @param wordpressPostUrl
  * @returns {Promise<unknown>}
  */
@@ -112,7 +112,7 @@ function wordpressRequest (wordpressPostUrl) {
 }
 
 /**
- * TODO
+ * Sends the coordinates {long,lat} for a given address (using french government API).
  * @param adresse
  * @returns {Promise<unknown>}
  */
@@ -140,6 +140,7 @@ function getCoordinatesFromRawAddress (adresse = '') {
 }
 
 /**
+ * Normalizes the content of a string (representing an address) for a proper use in a url during an API call.
  * @param rawAddress
  * @returns {string}
  */
