@@ -45,9 +45,10 @@ module.exports.treesToGeoJson = async function (url) {
   }
   wordpressFields.push(newFieldUrl)
 
-  return await this.wordpressRequest(url).then(function (WPContent) {
+  return await this.wordpressRequest(url).then(async function (WPContent) {
     for (const data of Object.keys(WPContent)) {
       const newDatum = {}
+      const address = WPContent[data].acf.place_address + ' ' + WPContent[data].acf.place_zipcode + ' ' + WPContent[data].acf.place_city
 
       for (const column of Object.keys(WPContent[data])) {
         if (column === 'title') {
@@ -58,6 +59,10 @@ module.exports.treesToGeoJson = async function (url) {
           newDatum[5] = WPContent[data][column]
         }
       }
+
+      const coordinates = await getCoordinatesFromRawAddress(address)
+      newDatum[0] = coordinates[0]
+      newDatum[1] = coordinates[1]
 
       wordpressRows.push(newDatum)
     }
@@ -99,6 +104,46 @@ module.exports.wordpressRequest = function (wordpressPostUrl) {
   })
 }
 
+/**
+ * TODO
+ * @param adresse
+ * @returns {Promise<unknown>}
+ */
+function getCoordinatesFromRawAddress (adresse = '') {
+  return new Promise(function (resolve, reject) {
+    const urlAPI = 'https://api-adresse.data.gouv.fr/search/?q=' + normalizeAddress(adresse) + '&limit=1' + '&lat=45.5&lon=4.7'
+    request({
+      url: urlAPI,
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }, function (error, response, body) {
+      if (error) {
+        reject(new Error(error.stack))
+      }
+      if (body) {
+        const rawDataFromAPI = JSON.parse(body)
+        resolve(rawDataFromAPI.center)
+      } else {
+        reject(new Error('error from wordpress request'))
+      }
+    })
+  })
+}
+
+/**
+ * @param rawAddress
+ * @returns {string}
+ */
+function normalizeAddress (rawAddress = '') {
+  /*
+  It appears that we need to :
+  - replace white spaces with +
+  - lowercase ?
+   */
+  return rawAddress.replace(' ', '+')
+}
 
 
 
@@ -115,8 +160,7 @@ module.exports.wordpressRequest = function (wordpressPostUrl) {
 
 
 
-
-
+/** TODO REFACTORING !!! **/
 
 
 
@@ -389,28 +433,6 @@ module.exports.treeToGeoJson = function (rawData) {
 
 
 
-function getCoordinatesFromRawAddress (adresse = '') {
-  return new Promise(function (resolve, reject) {
-    const urlAPI = 'https://api-adresse.data.gouv.fr/search/?q=' + normalizeAddress(adresse) + '&limit=1' + '&lat=45.5&lon=4.7'
-    request({
-      url: urlAPI,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }, function (error, response, body) {
-      if (error) {
-        reject(new Error(error.stack))
-      }
-      if (body) {
-        const rawDataFromAPI = JSON.parse(body)
-        resolve(rawDataFromAPI.center)
-      } else {
-        reject(new Error('error from wordpress request'))
-      }
-    })
-  })
-}
 
 /*        ABOUT IMAGES              */
 module.exports.insertWPImages = function (WPData) {
@@ -520,7 +542,6 @@ module.exports.insertWPCoordinates = function (WPData) {
 }
 
 /**
- * NO LONGER USED.
  * @param WPitem
  * @returns {Promise<unknown>}
  */
@@ -549,16 +570,4 @@ function getCoordinatesFromAddress (WPitem) {
   })
 }
 
-/**
- * NO LONGER USED.
- * @param rawAddress
- * @returns {string}
- */
-function normalizeAddress (rawAddress = '') {
-  /*
-  It appears that we need to :
-  - replace white spaces with +
-  - lowercase ?
-   */
-  return rawAddress.replace(' ', '+')
-}
+
