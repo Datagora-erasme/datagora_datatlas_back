@@ -45,25 +45,32 @@ module.exports.treesToGeoJson = async function (url) {
   }
   wordpressFields.push(newFieldUrl)
 
-  return await this.wordpressRequest(url).then(async function (WPContent) {
+  return await wordpressRequest(url).then(async function (WPContent) {
     for (const data of Object.keys(WPContent)) {
       const newDatum = {}
       const address = WPContent[data].acf.place_address + ' ' + WPContent[data].acf.place_zipcode + ' ' + WPContent[data].acf.place_city
+      let idPhoto
 
+      // COMMON DATA
       for (const column of Object.keys(WPContent[data])) {
         if (column === 'title') {
           newDatum[2] = WPContent[data][column].rendered
         } else if (column === 'acf') {
           newDatum[3] = WPContent[data][column].trees
+          idPhoto = WPContent[data][column].photo
         } else if (column === 'link') {
           newDatum[5] = WPContent[data][column]
         }
       }
-
+      // COORDINATES
       const coordinates = await getCoordinatesFromRawAddress(address)
       newDatum[0] = coordinates[0]
       newDatum[1] = coordinates[1]
+      // IMAGES
+      const imgWPContent = await wordpressRequest('canographia.datagora.erasme.org/wp-json/wp/v2/media/' + idPhoto)
+      newDatum[2] = imgWPContent.guid.rendered
 
+      // MISSION COMPLETE !
       wordpressRows.push(newDatum)
     }
     return {
@@ -80,7 +87,7 @@ module.exports.treesToGeoJson = async function (url) {
  * @param wordpressPostUrl
  * @returns {Promise<unknown>}
  */
-module.exports.wordpressRequest = function (wordpressPostUrl) {
+function wordpressRequest (wordpressPostUrl) {
   return new Promise(function (resolve, reject) {
     request({
       url: 'https://' + wordpressPostUrl,
@@ -145,25 +152,7 @@ function normalizeAddress (rawAddress = '') {
   return rawAddress.replace(' ', '+')
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /** TODO REFACTORING !!! **/
-
-
-
 
 /**
  * Sort data from a WordPress table into a coherent GEOjson format.
@@ -339,101 +328,6 @@ module.exports.toGeoJson = function (rawData) {
   }
 }
 
-/**
- * Sort data from a WordPress table into a coherent GEOjson format.
- * @param rawData The data from the WP page.
- * @param rawData[].acf.photo
- * @param rawData[].acf.place_address
- * @param rawData[].acf.place_zipcode
- * @param rawData[].acf.place_city
- */
-module.exports.treeToGeoJson = function (rawData) {
-  const wordpressFields = []
-  const wordpressRows = []
-
-  if (rawData) {
-    // FIELDS
-    const newFieldLat = {
-      name: 'latitude',
-      format: '',
-      type: 'real'
-    }
-    wordpressFields.push(newFieldLat)
-    const newFieldLon = {
-      name: 'longitude',
-      format: '',
-      type: 'real'
-    }
-    wordpressFields.push(newFieldLon)
-    const newFieldTitre = {
-      name: 'titre',
-      format: '',
-      type: 'string'
-    }
-    wordpressFields.push(newFieldTitre)
-    const newFieldNbArbres = {
-      name: 'nb_arbres',
-      format: '',
-      type: 'real'
-    }
-    wordpressFields.push(newFieldNbArbres)
-    const newFieldImg = {
-      name: 'img',
-      format: '',
-      type: 'string'
-    }
-    wordpressFields.push(newFieldImg)
-    const newFieldUrl = {
-      name: 'url',
-      format: '',
-      type: 'string'
-    }
-    wordpressFields.push(newFieldUrl)
-    // ROWS
-    for (const datum of Object.keys(rawData)) {
-      const newDatum = {}
-      const imgId = rawData[datum].acf.photo
-      const address = rawData[datum].acf.place_address + ' ' + rawData[datum].acf.place_zipcode + ' ' + rawData[datum].acf.place_city
-      let imgUrl
-      let latitude
-      let longitude
-
-      // todo refonte -> le routeur doit simplement appeler une fonction dans ce fichier et c'est cette fonction qui gérera les appels async
-      // Some data require to call other WP pages.
-      this.wordpressRequest('canographia.datagora.erasme.org/wp-json/wp/v2/media/' + imgId).then(function (imgWPContent) {
-        imgUrl = imgWPContent.guid.rendered
-        return imgUrl
-      }).then(function (imgUrl) {
-        return getCoordinatesFromRawAddress(address)
-      }).then(function (coord) {
-        longitude = coord[0]
-        latitude = coord[1]
-        for (const column of Object.keys(rawData[datum])) {
-          if (column === 'title') {
-            newDatum[2] = rawData[datum][column].rendered
-          } else if (column === 'acf') {
-            newDatum[3] = rawData[datum][column].trees
-          } else if (column === 'link') {
-            newDatum[5] = rawData[datum][column]
-          }
-          newDatum[0] = latitude
-          newDatum[1] = longitude
-          // newDatum[4] = 'img' --> https://canographia.datagora.erasme.org/wp-json/wp/v2/media/3935  .guid.rendered
-        }
-        console.log(newDatum)
-        wordpressRows.push(newDatum)
-      })
-    }
-  }
-  return {
-    fields: wordpressFields,
-    rows: wordpressRows
-  }
-}
-
-
-
-
 /*        ABOUT IMAGES              */
 module.exports.insertWPImages = function (WPData) {
   return new Promise(function (resolve) {
@@ -569,5 +463,3 @@ function getCoordinatesFromAddress (WPitem) {
     })
   })
 }
-
-

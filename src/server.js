@@ -104,12 +104,6 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
       DataWordpress.treesToGeoJson(req.params.dataWanted).then(function (properGEOjsonData) {
         res.status(200).send(properGEOjsonData)
       })
-      /*
-      DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
-        return DataWordpress.treeToGeoJson(rawData)
-      }).then(function (rawData) {
-        res.status(200).send(rawData)
-      }) */
     } else {
       DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
         return DataWordpress.toGeoJson(rawData)
