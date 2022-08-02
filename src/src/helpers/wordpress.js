@@ -64,11 +64,11 @@ module.exports.treesToGeoJson = async function (url) {
       }
       // COORDINATES
       const coordinates = await getCoordinatesFromRawAddress(address)
-      newDatum[0] = coordinates[0]
-      newDatum[1] = coordinates[1]
+      newDatum[0] = coordinates[1]
+      newDatum[1] = coordinates[0]
       // IMAGES
       const imgWPContent = await wordpressRequest('canographia.datagora.erasme.org/wp-json/wp/v2/media/' + idPhoto)
-      newDatum[2] = imgWPContent.guid.rendered
+      newDatum[4] = imgWPContent.guid.rendered
 
       // MISSION COMPLETE !
       wordpressRows.push(newDatum)
