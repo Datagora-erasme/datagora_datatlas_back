@@ -108,19 +108,6 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
       DataWordpress.canographiaToGeoJson(req.params.dataWanted).then(function (properGEOjsonData) {
         res.status(200).send(properGEOjsonData)
       })
-      /* DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
-        return DataWordpress.toGeoJson(rawData)
-      }).then(function (data) {
-        const promises = [
-          DataWordpress.insertWPImages(data),
-          DataWordpress.insertWPKeywords(data)
-        ]
-        return Promise.all(promises).then(() => {
-          return data
-        })
-      }).then(function (rawData) {
-        res.status(200).send(rawData)
-      }) */
     }
   }
 })
