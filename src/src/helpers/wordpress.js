@@ -1,5 +1,5 @@
 /**
- * Management of the data from notion.so.
+ * Management of the data from our custom WP API
  */
 
 const request = require('request')
@@ -204,6 +204,70 @@ module.exports.canographiaToGeoJson = async function (url) {
           newDatum[5] = WPContent[data][column]
         }
       }
+      wordpressRows.push(newDatum)
+    }
+    return {
+      fields: wordpressFields,
+      rows: wordpressRows
+    }
+  })
+}
+
+module.exports.eventsToGeoJson = async function (url) {
+  // FIELDS
+  const wordpressFields = [
+    {
+      name: 'titre',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'date',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'img',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'latitude',
+      format: '',
+      type: 'real'
+    },
+    {
+      name: 'longitude',
+      format: '',
+      type: 'real'
+    },
+    {
+      name: 'url',
+      format: '',
+      type: 'integer'
+    }
+  ]
+
+  // ROWS
+  const wordpressRows = []
+
+  return await wordpressRequest(url).then(async function (WPContent) {
+    for (const data of Object.keys(WPContent)) {
+      const newDatum = {}
+      for (const column of Object.keys(WPContent[data])) {
+        if (column === 'title') {
+          newDatum[0] = WPContent[data][column].rendered
+        } else if (column === 'link') {
+          newDatum[5] = WPContent[data][column]
+        } else if (column === 'acf') {
+          newDatum[1] = WPContent[data][column].time
+          newDatum[3] = WPContent[data][column].place.lat
+          newDatum[4] = WPContent[data][column].place.lng
+        }
+      }
+
+      // todo : images are supposed to be stored in newDatum[2] but can't get them for now.
+      newDatum[2] = ''
       wordpressRows.push(newDatum)
     }
     return {

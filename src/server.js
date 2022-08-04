@@ -104,6 +104,10 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
       DataWordpress.treesToGeoJson(req.params.dataWanted).then(function (properGEOjsonData) {
         res.status(200).send(properGEOjsonData)
       })
+    } else if (req.params.dataWanted === 'canographia.datagora.erasme.org/wp-json/wp/v2/evenement/') {
+      DataWordpress.eventsToGeoJson(req.params.dataWanted).then(function (properGEOjsonData) {
+        res.status(200).send(properGEOjsonData)
+      })
     } else {
       DataWordpress.canographiaToGeoJson(req.params.dataWanted).then(function (properGEOjsonData) {
         res.status(200).send(properGEOjsonData)
