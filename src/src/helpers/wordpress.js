@@ -5,46 +5,40 @@
 const request = require('request')
 
 module.exports.treesToGeoJson = async function (url) {
-  const wordpressFields = []
+  const wordpressFields = [
+    {
+      name: 'latitude',
+      format: '',
+      type: 'real'
+    },
+    {
+      name: 'longitude',
+      format: '',
+      type: 'real'
+    },
+    {
+      name: 'titre',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'nb_arbres',
+      format: '',
+      type: 'real'
+    },
+    {
+      name: 'img',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'url',
+      format: '',
+      type: 'string'
+    }
+  ]
+
   const wordpressRows = []
-
-  const newFieldLat = {
-    name: 'latitude',
-    format: '',
-    type: 'real'
-  }
-  wordpressFields.push(newFieldLat)
-  const newFieldLon = {
-    name: 'longitude',
-    format: '',
-    type: 'real'
-  }
-  wordpressFields.push(newFieldLon)
-  const newFieldTitre = {
-    name: 'titre',
-    format: '',
-    type: 'string'
-  }
-  wordpressFields.push(newFieldTitre)
-  const newFieldNbArbres = {
-    name: 'nb_arbres',
-    format: '',
-    type: 'real'
-  }
-  wordpressFields.push(newFieldNbArbres)
-  const newFieldImg = {
-    name: 'img',
-    format: '',
-    type: 'string'
-  }
-  wordpressFields.push(newFieldImg)
-  const newFieldUrl = {
-    name: 'url',
-    format: '',
-    type: 'string'
-  }
-  wordpressFields.push(newFieldUrl)
-
   return await wordpressRequest(url).then(async function (WPContent) {
     for (const data of Object.keys(WPContent)) {
       const newDatum = {}
@@ -81,70 +75,59 @@ module.exports.treesToGeoJson = async function (url) {
 }
 
 module.exports.canographiaToGeoJson = async function (url) {
-  const wordpressFields = []
-  const wordpressRows = []
-
   // FIELDS
-  const newFieldIcon = {
-    name: 'icon',
-    format: '',
-    type: 'string'
-  }
-  wordpressFields.push(newFieldIcon)
-  const newFieldPlaceLabel = {
-    name: 'place_label',
-    format: '',
-    type: 'string'
-  }
-  wordpressFields.push(newFieldPlaceLabel)
-  const newFieldDesc = {
-    name: 'description',
-    format: '',
-    type: 'string'
-  }
-  wordpressFields.push(newFieldDesc)
-  const newFieldContact = {
-    name: 'contact',
-    format: '',
-    type: 'string'
-  }
-  wordpressFields.push(newFieldContact)
-  const newFieldImg = {
-    name: 'img',
-    format: '',
-    type: 'string'
-  }
-  wordpressFields.push(newFieldImg)
-  const newFieldType = {
-    name: 'type',
-    format: '',
-    type: 'string'
-  }
-  wordpressFields.push(newFieldType)
-  const newFieldStatus = {
-    name: 'status_projets',
-    format: '',
-    type: 'string'
-  }
-  wordpressFields.push(newFieldStatus)
-  const newFieldTags = {
-    name: 'tags',
-    format: '',
-    type: 'string'
-  }
-  wordpressFields.push(newFieldTags)
-  const newFieldTrees = {
-    name: 'trees',
-    format: '',
-    type: 'integer'
-  }
-  wordpressFields.push(newFieldTrees)
-  const newFieldTypesProjets = {
-    name: 'types_projet',
-    format: '',
-    type: 'string'
-  }
-  wordpressFields.push(newFieldTypesProjets)
+  const wordpressFields = [
+    {
+      name: 'icon',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'place_label',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'description',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'contact',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'img',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'type',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'status_projets',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'tags',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'trees',
+      format: '',
+      type: 'integer'
+    },
+    {
+      name: 'types_projet',
+      format: '',
+      type: 'string'
+    }
+  ]
 
   const allMyStatus = {
     status2: "J'ai envie de réaliser ce projet",
@@ -159,6 +142,7 @@ module.exports.canographiaToGeoJson = async function (url) {
     chantier: 'Sur mon chantier'
   }
 
+  const wordpressRows = []
   return await wordpressRequest(url).then(async function (WPContent) {
     for (const data of Object.keys(WPContent)) {
       const newDatum = {}
