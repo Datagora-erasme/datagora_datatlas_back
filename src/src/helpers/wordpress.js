@@ -170,7 +170,8 @@ module.exports.canographiaToGeoJson = async function (url) {
           // We want the tags too. How do we get them ? We could either call WPContent[data][tags] which contains
           // all ids of the post tag. This will require a curl request for each id. Or we can get
           // WPContent[data][column]['wp:term'][0].href which contains all ids in a single page.
-          // The last solution is not the prettiest, but it is way faster than the first one.
+          // The last solution is not the prettiest, but it is way faster than the first one (one curl request against
+          // one for each tag).
           if (
             Object.prototype.hasOwnProperty.call(WPContent[data][column], 'wp:term') &&
             Object.prototype.hasOwnProperty.call(WPContent[data][column]['wp:term'][0], 'href')
