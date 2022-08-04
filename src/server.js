@@ -105,7 +105,10 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
         res.status(200).send(properGEOjsonData)
       })
     } else {
-      DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
+      DataWordpress.canographiaToGeoJson(req.params.dataWanted).then(function (properGEOjsonData) {
+        res.status(200).send(properGEOjsonData)
+      })
+      /* DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
         return DataWordpress.toGeoJson(rawData)
       }).then(function (data) {
         const promises = [
@@ -117,7 +120,7 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
         })
       }).then(function (rawData) {
         res.status(200).send(rawData)
-      })
+      }) */
     }
   }
 })
