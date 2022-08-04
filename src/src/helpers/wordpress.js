@@ -174,6 +174,8 @@ module.exports.canographiaToGeoJson = async function (url) {
           newDatum[1] = WPContent[data][column].place_label
           newDatum[3] = WPContent[data][column].contact
           newDatum[6] = allMyStatus[WPContent[data][column].status]
+          newDatum[8] = WPContent[data][column].trees
+          newDatum[9] = allProjectTypes[WPContent[data][column].type]
         } else if (column === 'content') {
           newDatum[2] = WPContent[data][column].rendered.replace(/(<([^>]+)>)/gi, '')
         } else if (column === '_links') {
