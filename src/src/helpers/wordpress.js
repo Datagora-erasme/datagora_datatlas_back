@@ -35,6 +35,11 @@ module.exports.treesToGeoJson = async function (url) {
       name: 'url',
       format: '',
       type: 'string'
+    },
+    {
+      name: 'icon',
+      format: '',
+      type: 'string'
     }
   ]
 
@@ -42,6 +47,7 @@ module.exports.treesToGeoJson = async function (url) {
   return await wordpressRequest(url).then(async function (WPContent) {
     for (const data of Object.keys(WPContent)) {
       const newDatum = {}
+      newDatum[6] = 'location-dot'
       const address = WPContent[data].acf.place_address + ' ' + WPContent[data].acf.place_zipcode + ' ' + WPContent[data].acf.place_city
       let idPhoto
 
@@ -230,6 +236,11 @@ module.exports.eventsToGeoJson = async function (url) {
       name: 'url',
       format: '',
       type: 'integer'
+    },
+    {
+      name: 'icon',
+      format: '',
+      type: 'string'
     }
   ]
 
@@ -239,6 +250,7 @@ module.exports.eventsToGeoJson = async function (url) {
   return await wordpressRequest(url).then(async function (WPContent) {
     for (const data of Object.keys(WPContent)) {
       const newDatum = {}
+      newDatum[6] = 'location-dot'
       for (const column of Object.keys(WPContent[data])) {
         if (column === 'title') {
           newDatum[0] = WPContent[data][column].rendered
