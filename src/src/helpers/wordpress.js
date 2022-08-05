@@ -347,7 +347,3 @@ function normalizeAddress (rawAddress = '') {
    */
   return rawAddress.replace(' ', '+')
 }
-
-function htmlEntities(textToDecode=''){
-  console.log(textToDecode)
-}
