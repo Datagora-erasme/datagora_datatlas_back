@@ -2,6 +2,7 @@
  * Management of the data from our custom WP API
  */
 
+const decode = require('html-entities')
 const request = require('request')
 
 module.exports.treesToGeoJson = async function (url) {
@@ -155,8 +156,8 @@ module.exports.canographiaToGeoJson = async function (url) {
       newDatum[0] = 'location-dot'
       for (const column of Object.keys(WPContent[data])) {
         if (column === 'acf') {
-          newDatum[1] = WPContent[data][column].place_label
-          newDatum[3] = WPContent[data][column].contact
+          newDatum[1] = decode.decode(WPContent[data][column].place_label, { level: 'html5' })
+          newDatum[3] = decode.decode(WPContent[data][column].contact, { level: 'html5' })
           newDatum[6] = allMyStatus[WPContent[data][column].status]
           newDatum[8] = WPContent[data][column].trees
           newDatum[9] = allProjectTypes[WPContent[data][column].type]
@@ -253,7 +254,7 @@ module.exports.eventsToGeoJson = async function (url) {
       newDatum[6] = 'location-dot'
       for (const column of Object.keys(WPContent[data])) {
         if (column === 'title') {
-          newDatum[0] = WPContent[data][column].rendered
+          newDatum[0] = decode.decode(WPContent[data][column].rendered, { level: 'html5' })
         } else if (column === 'link') {
           newDatum[5] = WPContent[data][column]
         } else if (column === 'acf') {
@@ -345,4 +346,8 @@ function normalizeAddress (rawAddress = '') {
   - lowercase ?
    */
   return rawAddress.replace(' ', '+')
+}
+
+function htmlEntities(textToDecode=''){
+  console.log(textToDecode)
 }
