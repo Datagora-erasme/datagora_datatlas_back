@@ -6,10 +6,13 @@ const fs = require('fs')
 
 /**
  * Reads the Kepler configuration file and sends its content back.
- * @returns {string}
  */
 module.exports.getKeplerConfiguration = () => {
-  return JSON.parse(readConfFile('data/KeplerConfiguration.json'))
+  if (fs.existsSync('data/KeplerConfiguration.json')) {
+    return [200, JSON.parse(readConfFile('data/KeplerConfiguration.json'))]
+  } else {
+    return [500, 'Fichier de configuration inaccessible.']
+  }
 }
 
 /**
