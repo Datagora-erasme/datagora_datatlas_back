@@ -146,3 +146,5 @@ app.post('/api/upload/', (req, res, next) => {
     res.status(401).send('Unauthorized')
   }
 })
+
+module.exports = app
