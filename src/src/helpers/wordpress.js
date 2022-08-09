@@ -41,6 +41,11 @@ module.exports.treesToGeoJson = async function (url) {
       name: 'icon',
       format: '',
       type: 'string'
+    },
+    {
+      name: 'address',
+      format: '',
+      type: 'string'
     }
   ]
 
@@ -50,6 +55,7 @@ module.exports.treesToGeoJson = async function (url) {
       const newDatum = {}
       newDatum[6] = 'location-dot'
       const address = WPContent[data].acf.place_address + ' ' + WPContent[data].acf.place_zipcode + ' ' + WPContent[data].acf.place_city
+      newDatum[7] = address
       let idPhoto
 
       // COMMON DATA
@@ -133,6 +139,16 @@ module.exports.canographiaToGeoJson = async function (url) {
       name: 'types_projet',
       format: '',
       type: 'string'
+    },
+    {
+      name: 'latitude',
+      format: '',
+      type: 'real'
+    },
+    {
+      name: 'longitude',
+      format: '',
+      type: 'real'
     }
   ]
 
@@ -148,7 +164,6 @@ module.exports.canographiaToGeoJson = async function (url) {
     entreprise: 'Dans mon entreprise',
     chantier: 'Sur mon chantier'
   }
-
   const wordpressRows = []
   return await wordpressRequest(url).then(async function (WPContent) {
     for (const data of Object.keys(WPContent)) {
@@ -161,6 +176,8 @@ module.exports.canographiaToGeoJson = async function (url) {
           newDatum[6] = allMyStatus[WPContent[data][column].status]
           newDatum[8] = WPContent[data][column].trees
           newDatum[9] = allProjectTypes[WPContent[data][column].type]
+          newDatum[10] = WPContent[data][column].place.lat
+          newDatum[11] = WPContent[data][column].place.lng
         } else if (column === 'content') {
           newDatum[2] = WPContent[data][column].rendered.replace(/(<([^>]+)>)/gi, '')
         } else if (column === '_links') {
