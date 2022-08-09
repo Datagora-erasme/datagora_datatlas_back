@@ -17,10 +17,14 @@ module.exports.getKeplerConfiguration = () => {
 
 /**
  * Reads the layers configuration file and sends its content back.
- * @returns {string}
+ * @returns {(number|any)[]}
  */
 module.exports.getLayersConfiguration = () => {
-  return JSON.parse(readConfFile('data/LayersConfiguration.json'))
+  if (fs.existsSync('data/LayersConfiguration.json')) {
+    return [200, JSON.parse(readConfFile('data/LayersConfiguration.json'))]
+  } else {
+    return [500, 'Fichier de configuration inaccessible.']
+  }
 }
 
 /**
