@@ -27,6 +27,7 @@
     "request": "^2.88.2"
   },
   "devDependencies": {
+    "mocha": "^10.0.0",
     "nodemon": "^2.0.12",
     "standard": "*",
     "supertest": "^6.2.4"
