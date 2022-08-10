@@ -278,11 +278,14 @@ module.exports.eventsToGeoJson = async function (url) {
           newDatum[1] = WPContent[data][column].time
           newDatum[3] = WPContent[data][column].place.lat
           newDatum[4] = WPContent[data][column].place.lng
+          newDatum[2] = ''
+          const imgId = WPContent[data][column].photos
+          if (imgId!==''){
+            const imgWPContent = await wordpressRequest('canographia.datagora.erasme.org/wp-json/wp/v2/media/' + imgId[0])
+            newDatum[2] = imgWPContent.guid.rendered
+          }
         }
       }
-
-      // todo : images are supposed to be stored in newDatum[2] but can't get them for now.
-      newDatum[2] = ''
       wordpressRows.push(newDatum)
     }
     return {
