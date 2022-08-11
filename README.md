@@ -49,10 +49,10 @@ To launch the test
 `mocha tests` can be used to launch the 
 **What is tested ?**
 For now all the back get routes are tested
-- api/conf/instance
-- api/conf/kepler
-- api/data/notion
-- api/data/wordpress
+- GET api/conf/instance
+- GET api/conf/kepler
+- GET api/data/notion
+- GET api/data/wordpress
 
 **Todo**
 - POST api/conf/instance
