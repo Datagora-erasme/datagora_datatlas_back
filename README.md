@@ -44,5 +44,17 @@ For development installs all the node dependencies with
 
 
 ### Unit testing
-Unit testing is using Mocha
-`npm install -g mocha`
+Unit testing is using Mocha and Supertest
+To launch the test 
+`mocha tests` can be used to launch the 
+**What is tested ?**
+For now all the back get routes are tested
+- api/conf/instance
+- api/conf/kepler
+- api/data/notion
+- api/data/wordpress
+
+**Todo**
+- POST api/conf/instance
+- POST api/conf/kepler
+- Check the json format of all routes for validation
