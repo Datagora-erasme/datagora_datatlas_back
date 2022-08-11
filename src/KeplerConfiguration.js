@@ -11,7 +11,7 @@ module.exports.getKeplerConfiguration = () => {
   if (fs.existsSync('data/KeplerConfiguration.json')) {
     return [200, JSON.parse(readConfFile('data/KeplerConfiguration.json'))]
   } else {
-    return [500, 'Fichier de configuration inaccessible.']
+    return [500, 'Unreachable configuration file.']
   }
 }
 
@@ -23,7 +23,7 @@ module.exports.getLayersConfiguration = () => {
   if (fs.existsSync('data/LayersConfiguration.json')) {
     return [200, JSON.parse(readConfFile('data/LayersConfiguration.json'))]
   } else {
-    return [500, 'Fichier de configuration inaccessible.']
+    return [500, 'Unreachable configuration file.']
   }
 }
 
