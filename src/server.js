@@ -52,8 +52,9 @@ app.get('/api/conf/:confWanted/', (req, res) => {
   if (req.params.confWanted === 'kepler') {
     const [code, content] = KeplerConfiguration.getKeplerConfiguration()
     res.status(code).send(content)
-  } else if (req.params.confWanted === 'instance') { // todo fait comme audessus
-    res.status(200).send(KeplerConfiguration.getLayersConfiguration())
+  } else if (req.params.confWanted === 'instance') {
+    const [code, content] = KeplerConfiguration.getLayersConfiguration()
+    res.status(code).send(content)
   } else {
     res.status(400).send('Unknown conf.')
   }
