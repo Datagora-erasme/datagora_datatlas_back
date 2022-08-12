@@ -34,10 +34,10 @@ module.exports.getLayersConfiguration = () => {
 module.exports.storeConfigurationKepler = (content) => {
   fs.writeFile('data/KeplerConfiguration.json', content, err => {
     if (err) {
-      console.error(err)
-      return err
+      return [500, err]
     }
   })
+  return [200, 'Conf updated']
 }
 
 /**
@@ -48,9 +48,10 @@ module.exports.storeConfigurationLayers = (content) => {
   fs.writeFile('data/LayersConfiguration.json', content, err => {
     if (err) {
       console.error(err)
-      return err
+      return [500, err]
     }
   })
+  return [200, 'Conf updated']
 }
 
 /*                                          METHODS                                                                   */

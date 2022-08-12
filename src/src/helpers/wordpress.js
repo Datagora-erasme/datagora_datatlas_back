@@ -171,6 +171,7 @@ module.exports.canographiaToGeoJson = async function (url) {
       newDatum[0] = 'location-dot'
       for (const column of Object.keys(WPContent[data])) {
         if (column === 'acf') {
+          // todo renvoyer adresse aussi complète
           newDatum[1] = decode.decode(WPContent[data][column].place_label, { level: 'html5' })
           newDatum[3] = decode.decode(WPContent[data][column].contact, { level: 'html5' })
           newDatum[6] = allMyStatus[WPContent[data][column].status]
