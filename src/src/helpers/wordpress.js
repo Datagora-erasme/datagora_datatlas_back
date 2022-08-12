@@ -149,6 +149,11 @@ module.exports.canographiaToGeoJson = async function (url) {
       name: 'longitude',
       format: '',
       type: 'real'
+    },
+    {
+      name: 'address',
+      format: '',
+      type: 'string'
     }
   ]
 
@@ -171,7 +176,6 @@ module.exports.canographiaToGeoJson = async function (url) {
       newDatum[0] = 'location-dot'
       for (const column of Object.keys(WPContent[data])) {
         if (column === 'acf') {
-          // todo renvoyer adresse aussi complète
           newDatum[1] = decode.decode(WPContent[data][column].place_label, { level: 'html5' })
           newDatum[3] = decode.decode(WPContent[data][column].contact, { level: 'html5' })
           newDatum[6] = allMyStatus[WPContent[data][column].status]
@@ -179,6 +183,7 @@ module.exports.canographiaToGeoJson = async function (url) {
           newDatum[9] = allProjectTypes[WPContent[data][column].type]
           newDatum[10] = WPContent[data][column].place.lat
           newDatum[11] = WPContent[data][column].place.lng
+          newDatum[12] = WPContent[data][column].place.address
         } else if (column === 'content') {
           newDatum[2] = WPContent[data][column].rendered.replace(/(<([^>]+)>)/gi, '')
         } else if (column === '_links') {
@@ -260,6 +265,11 @@ module.exports.eventsToGeoJson = async function (url) {
       name: 'icon',
       format: '',
       type: 'string'
+    },
+    {
+      name: 'address',
+      format: '',
+      type: 'string'
     }
   ]
 
@@ -279,6 +289,7 @@ module.exports.eventsToGeoJson = async function (url) {
           newDatum[1] = WPContent[data][column].time
           newDatum[3] = WPContent[data][column].place.lat
           newDatum[4] = WPContent[data][column].place.lng
+          newDatum[7] = WPContent[data][column].place.markers[0].label
           newDatum[2] = ''
           const imgId = WPContent[data][column].photos
           if (imgId!==''){
