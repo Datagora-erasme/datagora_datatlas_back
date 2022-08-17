@@ -2,7 +2,7 @@
 
 const express = require('express'); // (npm install --save express)
 const request = require('supertest');
-const app = require('../server');
+const app = require('../src/server');
 
 // get .env variables
 const notionDbId = process.env.NOTION_DATABASE_ID

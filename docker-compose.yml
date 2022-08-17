@@ -8,6 +8,6 @@ services:
     ports:
       - "0.0.0.0:3000:3000"
     volumes:
-      - ./src:/src
+      - ./:/src
     command: npm run dev
     stdin_open: true
