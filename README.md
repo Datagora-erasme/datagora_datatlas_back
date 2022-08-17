@@ -15,22 +15,6 @@ It proposes a simple API that can be requested by anyone who has been authorized
 | `/api/upload/`                     | GET    | A route that sends a list of all stored file (pictures and logos mostly)                               |
 | `/api/upload/`                     | POST   | A route that stores a file on the back-office                                                          |
 
-## Installation
-
-```bash
-# Get the code
-git clone https://github.com/datatlas-erasme/back.git
-# Install dependencies
-cd src
-npm install
-# Launch server
-docker-compose up
-```
-
-Following the steps above will start a server o your localhost accessible on port 3000. You can already test if it works
-using the [testing route]((http://localhost:3000/api/test))
-
-But usually, this back-office is useless unless you use its counterpart front-office [here](https://github.com/datatlas-erasme/front).
 
 ## Options
 
@@ -42,19 +26,30 @@ TODO : How to restrict access to the backoffice.
 For development installs all the node dependencies with
 `npm install`
 
+`npm start`
 
-### Unit testing
-Unit testing is using Mocha and Supertest
-To launch the test 
-`mocha tests` can be used to launch the 
-**What is tested ?**
-For now all the back get routes are tested
-- GET api/conf/instance
-- GET api/conf/kepler
-- GET api/data/notion
-- GET api/data/wordpress
+Following the steps above will start a server o your localhost accessible on port 3000. You can already test if it works
+using the [testing route]((http://localhost:3000/api/test))
+
+But usually, this back-office is useless unless you use its counterpart front-office [here](https://github.com/datatlas-erasme/front).
+
+
+## Test
+
+Unit tests are implemented with **Mocha** and **Supertest**.
+
+```
+npm test
+```
+
+**What's tested ?**
+All `GET` routes are tested :
+- `GET /api/conf/instance`
+- `GET /api/conf/kepler`
+- `GET /api/data/notion`
+- `GET /api/data/wordpress`
 
 **Todo**
-- POST api/conf/instance
-- POST api/conf/kepler
-- Check the json format of all routes for validation
+- `POST /api/conf/instance`
+- `POST /api/conf/kepler`
+- Check the __Json__ format of all routes for validation.
