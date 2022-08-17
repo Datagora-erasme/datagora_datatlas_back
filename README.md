@@ -36,3 +36,13 @@ But usually, this back-office is useless unless you use its counterpart front-of
 
 TODO : Replace your notion API and datatlas port in the .env file.
 TODO : How to restrict access to the backoffice.
+
+## Development
+
+For development installs all the node dependencies with
+`npm install`
+
+
+### Unit testing
+Unit testing is using Mocha
+`npm install -g mocha`

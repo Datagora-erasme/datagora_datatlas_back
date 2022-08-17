@@ -4,8 +4,8 @@ const formidable = require('formidable')
 const cors = require('cors')
 require('dotenv').config()
 const KeplerConfiguration = require('./KeplerConfiguration')
-const DataNotion = require('./src/helpers/notion')
-const DataWordpress = require('./src/helpers/wordpress')
+const DataNotion = require('./helpers/notion')
+const DataWordpress = require('./helpers/wordpress')
 const path = require('path')
 const fs = require('fs')
 
@@ -50,9 +50,11 @@ app.route('/api/test/')
  */
 app.get('/api/conf/:confWanted/', (req, res) => {
   if (req.params.confWanted === 'kepler') {
-    res.status(200).send(KeplerConfiguration.getKeplerConfiguration())
+    const [code, content] = KeplerConfiguration.getKeplerConfiguration()
+    res.status(code).send(content)
   } else if (req.params.confWanted === 'instance') {
-    res.status(200).send(KeplerConfiguration.getLayersConfiguration())
+    const [code, content] = KeplerConfiguration.getLayersConfiguration()
+    res.status(code).send(content)
   } else {
     res.status(400).send('Unknown conf.')
   }
@@ -73,16 +75,16 @@ app.post('/api/conf/:confWanted/', (req, res) => {
     const form = formidable({ multiples: true })
     form.parse(req, (err, fields) => {
       if (err) {
-        res.status(400).send('incoherent data')
+        res.status(400).send('Incoherent data')
       }
       if (req.params.confWanted === 'kepler' && has.call(fields, 'configuration_kepler')) {
-        KeplerConfiguration.storeConfigurationKepler(fields.configuration_kepler)
-        res.status(200).send()
+        const [code, content] = KeplerConfiguration.storeConfigurationKepler(fields.configuration_kepler)
+        res.status(code).send(content)
       } else if (req.params.confWanted === 'instance' && has.call(fields, 'configuration_instance')) {
-        KeplerConfiguration.storeConfigurationLayers(fields.configuration_instance)
-        res.status(200).send()
+        const [code, content] = KeplerConfiguration.storeConfigurationLayers(fields.configuration_instance)
+        res.status(code).send(content)
       } else {
-        res.status(400).send('unknown data')
+        res.status(400).send('Unknown data')
       }
     })
   } else {
@@ -104,19 +106,13 @@ app.get('/api/data/:dataType/:dataWanted/', function (req, res) {
       DataWordpress.treesToGeoJson(req.params.dataWanted).then(function (properGEOjsonData) {
         res.status(200).send(properGEOjsonData)
       })
+    } else if (req.params.dataWanted === 'canographia.datagora.erasme.org/wp-json/wp/v2/evenement/') {
+      DataWordpress.eventsToGeoJson(req.params.dataWanted).then(function (properGEOjsonData) {
+        res.status(200).send(properGEOjsonData)
+      })
     } else {
-      DataWordpress.wordpressRequest(req.params.dataWanted).then(function (rawData) {
-        return DataWordpress.toGeoJson(rawData)
-      }).then(function (data) {
-        const promises = [
-          DataWordpress.insertWPImages(data),
-          DataWordpress.insertWPKeywords(data)
-        ]
-        return Promise.all(promises).then(() => {
-          return data
-        })
-      }).then(function (rawData) {
-        res.status(200).send(rawData)
+      DataWordpress.canographiaToGeoJson(req.params.dataWanted).then(function (properGEOjsonData) {
+        res.status(200).send(properGEOjsonData)
       })
     }
   }
@@ -151,3 +147,5 @@ app.post('/api/upload/', (req, res, next) => {
     res.status(401).send('Unauthorized')
   }
 })
+
+module.exports = app

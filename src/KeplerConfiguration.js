@@ -6,18 +6,25 @@ const fs = require('fs')
 
 /**
  * Reads the Kepler configuration file and sends its content back.
- * @returns {string}
  */
 module.exports.getKeplerConfiguration = () => {
-  return JSON.parse(readConfFile('data/KeplerConfiguration.json'))
+  if (fs.existsSync('data/KeplerConfiguration.json')) {
+    return [200, JSON.parse(readConfFile('data/KeplerConfiguration.json'))]
+  } else {
+    return [500, 'Unreachable configuration file.']
+  }
 }
 
 /**
  * Reads the layers configuration file and sends its content back.
- * @returns {string}
+ * @returns {(number|any)[]}
  */
 module.exports.getLayersConfiguration = () => {
-  return JSON.parse(readConfFile('data/LayersConfiguration.json'))
+  if (fs.existsSync('data/LayersConfiguration.json')) {
+    return [200, JSON.parse(readConfFile('data/LayersConfiguration.json'))]
+  } else {
+    return [500, 'Unreachable configuration file.']
+  }
 }
 
 /**
@@ -27,10 +34,10 @@ module.exports.getLayersConfiguration = () => {
 module.exports.storeConfigurationKepler = (content) => {
   fs.writeFile('data/KeplerConfiguration.json', content, err => {
     if (err) {
-      // console.error(err)
-      return err
+      return [500, err]
     }
   })
+  return [200, 'Conf updated']
 }
 
 /**
@@ -40,10 +47,11 @@ module.exports.storeConfigurationKepler = (content) => {
 module.exports.storeConfigurationLayers = (content) => {
   fs.writeFile('data/LayersConfiguration.json', content, err => {
     if (err) {
-      // console.error(err)
-      return err
+      console.error(err)
+      return [500, err]
     }
   })
+  return [200, 'Conf updated']
 }
 
 /*                                          METHODS                                                                   */
