@@ -1,8 +1,10 @@
 # DATAGORA - DATATLAS-back
 
-This depot contains our work about the back-office of the project `DATATLAS`.
+This depot contains our work about the back-office of the project `DATATLAS`. 
 
 It proposes a simple API that can be requested by anyone who has been authorized in the options.
+
+The back-end handles all the data treatements of DatAtlas
 
 ## Routes proposed
 
