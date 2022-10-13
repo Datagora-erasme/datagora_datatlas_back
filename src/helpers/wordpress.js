@@ -154,6 +154,11 @@ module.exports.canographiaToGeoJson = async function (url) {
       name: 'address',
       format: '',
       type: 'string'
+    },
+    {
+      name: 'url',
+      format: '',
+      type: 'string'
     }
   ]
 
@@ -217,6 +222,8 @@ module.exports.canographiaToGeoJson = async function (url) {
           }
         } else if (column === 'type') {
           newDatum[5] = WPContent[data][column]
+        } else if (column === 'link') {
+          newDatum[13] = WPContent[data][column]
         }
       }
       wordpressRows.push(newDatum)
