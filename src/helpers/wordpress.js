@@ -159,6 +159,11 @@ module.exports.canographiaToGeoJson = async function (url) {
       name: 'url',
       format: '',
       type: 'string'
+    },
+    {
+      name: 'title',
+      format: '',
+      type: 'string'
     }
   ]
 
@@ -224,6 +229,8 @@ module.exports.canographiaToGeoJson = async function (url) {
           newDatum[5] = WPContent[data][column]
         } else if (column === 'link') {
           newDatum[13] = WPContent[data][column]
+        } else if (column === 'title') {
+          newDatum[14] = WPContent[data][column].rendered
         }
       }
       wordpressRows.push(newDatum)
