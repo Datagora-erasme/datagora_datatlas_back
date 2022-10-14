@@ -270,6 +270,11 @@ module.exports.eventsToGeoJson = async function (url) {
       name: 'address',
       format: '',
       type: 'string'
+    },
+    {
+      name: 'inscription_url',
+      format: '',
+      type: 'string'
     }
   ]
 
@@ -290,6 +295,7 @@ module.exports.eventsToGeoJson = async function (url) {
           newDatum[3] = WPContent[data][column].place.lat
           newDatum[4] = WPContent[data][column].place.lng
           newDatum[7] = WPContent[data][column].place.markers[0].label
+          newDatum[8] = WPContent[data][column].button_href
           newDatum[2] = ''
           const imgId = WPContent[data][column].photos
           if (imgId!==''){
