@@ -161,7 +161,7 @@ module.exports.canographiaToGeoJson = async function (url) {
       type: 'string'
     },
     {
-      name: 'title',
+      name: 'titre',
       format: '',
       type: 'string'
     }
