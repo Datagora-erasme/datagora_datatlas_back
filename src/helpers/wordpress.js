@@ -4,6 +4,23 @@
 
 const decode = require('html-entities')
 const request = require('request')
+require('dotenv').config()
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+
+// Configuring the logger
+log4js.configure({
+  appenders: {
+    out: { type: "stdout" },
+    app: { type: "file", filename: "../backend.log" },
+  },
+  categories: {
+    default: { appenders: ["out", "app"], level: "debug" },
+  }
+});
+
+// get env var LOG_LEVEL
+logger.level = process.env.LOG_LEVEL || 'debug'
 
 module.exports.treesToGeoJson = async function (url) {
   const wordpressFields = [
@@ -79,6 +96,7 @@ module.exports.treesToGeoJson = async function (url) {
 
       // MISSION COMPLETE !
       wordpressRows.push(newDatum)
+      logger.debug('Wordpress canographia trees new datum : ' + newDatum)
     }
     return {
       fields: wordpressFields,
@@ -234,6 +252,7 @@ module.exports.canographiaToGeoJson = async function (url) {
         }
       }
       wordpressRows.push(newDatum)
+      logger.debug('Wordpress canographia projet new datum : ' + newDatum)
     }
     return {
       fields: wordpressFields,
@@ -319,6 +338,7 @@ module.exports.eventsToGeoJson = async function (url) {
         }
       }
       wordpressRows.push(newDatum)
+      logger.debug('Wordpress canographia event new datum : ' + newDatum)
     }
     return {
       fields: wordpressFields,
@@ -345,6 +365,7 @@ function wordpressRequest (wordpressPostUrl) {
     }, function (error, response, body) {
       if (error) {
         reject(new Error(error.stack))
+        logger.error('Wordpress request error : ' + error.stack)
       }
       if (body) {
         const rawDataFromWordpress = JSON.parse(body)
@@ -352,6 +373,7 @@ function wordpressRequest (wordpressPostUrl) {
           resolve(rawDataFromWordpress)
         } else {
           reject(new Error('error from wordpress request'))
+          logger.error('Wordpress request error : ' + error.stack)
         }
       }
     })
@@ -375,12 +397,14 @@ function getCoordinatesFromRawAddress (adresse = '') {
     }, function (error, response, body) {
       if (error) {
         reject(new Error(error.stack))
+        logger.error('Wordpress request error : ' + error.stack)
       }
       if (body) {
         const rawDataFromAPI = JSON.parse(body)
         resolve(rawDataFromAPI.center)
       } else {
         reject(new Error('error from wordpress request'))
+        logger.error('Wordpress request error : ' + error.stack)
       }
     })
   })
