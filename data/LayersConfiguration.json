@@ -1,0 +1,46 @@
+{
+    "siteTitle": "Instance Name",
+    "mapboxToken": "pk.eyJ1IjoicGV0aXRkb251dCIsImEiOiJja3pvNTlsbnYzNmRjMm5vY3Jtbjc3eWV4In0.Er9EZzo9l6CFeZ81yqCuMA",
+    "defaultMapLocation": {
+        "latitude": 0,
+        "longitude": 0,
+        "zoom": 10
+    },
+    "defaultMapBoxStyleUrl": "mapbox://styles/petitdonut/ckzo5cthu00k714rwspym52ly",
+    "modules": {
+        "exportDataBtn": true
+    },
+    "theme": {
+        "filterSidePanel": {
+            "buttonColorRange": [
+                "#dc7e6d",
+                "#69b59d",
+                "#c3c356"
+            ]
+        }
+    },
+    "bottomRightButtons": [
+        {
+            "text": "hey im a button",
+            "url": "https://demarches.guichet-recette.grandlyon.com/projets-de-crowdsourcing/ajouter-un-marchand/ "
+        },
+        {
+            "text": "hey im a button",
+            "url": "https://demarches.guichet-recette.grandlyon.com/projets-de-crowdsourcing/ajouter-un-marchand/ "
+        }
+    ],
+    "layers": [
+        {
+            "name": "Manger Local",
+            "type": "geojson",
+            "url": "https://download.data.grandlyon.com/wfs/grandlyon?SERVICE=WFS&VERSION=2.0.0&request=GetFeature&typename=eco_economie.ecomangerlocal_latest&outputFormat=application/json; subtype=geojson&SRSNAME=EPSG:4171&startIndex=0",
+            "id": 1
+        },
+        {
+            "name": "Marche forains",
+            "type": "geojson",
+            "url": "https://download.data.grandlyon.com/wfs/grandlyon?SERVICE=WFS&VERSION=2.0.0&request=GetFeature&typename=eco_economie.ecomarcheinstance_latest&outputFormat=application/json; subtype=geojson&SRSNAME=EPSG:4171&startIndex=0",
+            "id": 2
+        }
+    ]
+}

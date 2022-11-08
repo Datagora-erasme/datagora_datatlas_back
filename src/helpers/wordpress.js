@@ -149,6 +149,21 @@ module.exports.canographiaToGeoJson = async function (url) {
       name: 'longitude',
       format: '',
       type: 'real'
+    },
+    {
+      name: 'address',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'url',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'titre',
+      format: '',
+      type: 'string'
     }
   ]
 
@@ -178,6 +193,7 @@ module.exports.canographiaToGeoJson = async function (url) {
           newDatum[9] = allProjectTypes[WPContent[data][column].type]
           newDatum[10] = WPContent[data][column].place.lat
           newDatum[11] = WPContent[data][column].place.lng
+          newDatum[12] = WPContent[data][column].place.address
         } else if (column === 'content') {
           newDatum[2] = WPContent[data][column].rendered.replace(/(<([^>]+)>)/gi, '')
         } else if (column === '_links') {
@@ -211,6 +227,10 @@ module.exports.canographiaToGeoJson = async function (url) {
           }
         } else if (column === 'type') {
           newDatum[5] = WPContent[data][column]
+        } else if (column === 'link') {
+          newDatum[13] = WPContent[data][column]
+        } else if (column === 'title') {
+          newDatum[14] = WPContent[data][column].rendered
         }
       }
       wordpressRows.push(newDatum)
@@ -259,6 +279,16 @@ module.exports.eventsToGeoJson = async function (url) {
       name: 'icon',
       format: '',
       type: 'string'
+    },
+    {
+      name: 'address',
+      format: '',
+      type: 'string'
+    },
+    {
+      name: 'inscription_url',
+      format: '',
+      type: 'string'
     }
   ]
 
@@ -278,6 +308,8 @@ module.exports.eventsToGeoJson = async function (url) {
           newDatum[1] = WPContent[data][column].time
           newDatum[3] = WPContent[data][column].place.lat
           newDatum[4] = WPContent[data][column].place.lng
+          newDatum[7] = WPContent[data][column].place.markers[0].label
+          newDatum[8] = WPContent[data][column].button_href
           newDatum[2] = ''
           const imgId = WPContent[data][column].photos
           if (imgId!==''){

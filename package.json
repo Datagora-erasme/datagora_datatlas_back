@@ -2,10 +2,10 @@
   "name": "datagora_datatlas_back",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "mocha tests --timeout 5000",
-    "dev": "nodemon -L server.js"
+    "dev": "nodemon -L src/server.js"
   },
   "repository": {
     "type": "git",

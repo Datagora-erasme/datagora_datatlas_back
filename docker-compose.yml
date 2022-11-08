@@ -6,8 +6,8 @@ services:
       dockerfile: Dockerfile.dev
     restart: always
     ports:
-      - "0.0.0.0:3000:3000"
+      - "0.0.0.0:3001:3001"
     volumes:
-      - ./src:/src
+      - ./:/src
     command: npm run dev
     stdin_open: true
