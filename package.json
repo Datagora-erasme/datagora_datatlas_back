@@ -24,6 +24,7 @@
     "express": "^4.17.3",
     "formidable": "^2.0.1",
     "html-entities": "^2.3.3",
+    "log4js": "^6.7.0",
     "request": "^2.88.2"
   },
   "devDependencies": {
