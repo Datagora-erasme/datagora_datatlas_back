@@ -1,8 +1,26 @@
 /**
  * Management of the data from notion.so.
  */
-
 const request = require('request')
+require('dotenv').config()
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+
+// Configuring the logger
+log4js.configure({
+  appenders: {
+    out: { type: "stdout" },
+    app: { type: "file", filename: "../backend.log" },
+  },
+  categories: {
+    default: { appenders: ["out", "app"], level: "debug" },
+  }
+});
+
+// get env var LOG_LEVEL
+logger.level = process.env.LOG_LEVEL || 'debug'
+
+logger.debug('Notion - Data from notion.so has been sorted into a coherent GEOjson format.')
 
 /**
  * Sort data from a notion table into a coherent GEOjson format.
@@ -30,6 +48,7 @@ module.exports.toGeoJson = function (rawData, queryParameters) {
         type: typeData
       }
       notionFields.push(newField)
+      logger.debug('Notion - New field added to the notionFields array :', newField)
     })
 
     rawData.forEach((line) => {
@@ -97,6 +116,7 @@ module.exports.toGeoJson = function (rawData, queryParameters) {
         } else {
           newDatum[count] = ''
           console.log('unknown type of notion data' + line.properties[datum])
+          logger.warn('Notion - Unknown type of notion data :', line.properties[datum])
         }
         if (!newDatum[count]) {
           newDatum[count] = ''
@@ -105,6 +125,7 @@ module.exports.toGeoJson = function (rawData, queryParameters) {
       })
       if (!isExcluded) {
         rows.push(newDatum)
+        logger.debug('Notion - New row added to the rows array :', typeof(newDatum))
       }
     })
 
@@ -133,13 +154,16 @@ module.exports.notionRequest = function (idNotionTable) {
     }, function (error, response, body) {
       if (error) {
         reject(new Error(error.stack))
+        logger.error('Notion - Error while requesting notion :', error.stack)
       }
       if (body) {
         const rawDataFromNotion = JSON.parse(body).results
         if (rawDataFromNotion !== null) {
           resolve(rawDataFromNotion)
+          logger.debug('Notion - Raw data from notion :' + typeof (rawDataFromNotion))
         } else {
           reject(new Error(error.stack))
+          logger.error('Notion - Error while requesting notion :', error.stack)
         }
       }
     })
