@@ -220,7 +220,7 @@ module.exports.canographiaToGeoJson = async function (url) {
             Object.prototype.hasOwnProperty.call(WPContent[data][column]['acf:attachment'][0], 'href')
           ) {
             const imgWPContent = await wordpressRequest(WPContent[data][column]['acf:attachment'][0].href.replace('https://', '').replace('http://', ''))
-            newDatum[4] = imgWPContent.guid.rendered
+            newDatum[4] = imgWPContent.guid.rendered.replace('http://', 'https://')
           } else {
             newDatum[4] = ''
           }
